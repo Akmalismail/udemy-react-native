@@ -1,6 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationDrawerProp } from 'react-navigation-drawer';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
+
+import CustomHeaderButton from '../components/CustomHeaderButton';
 
 const FiltersScreen: NavigationStackScreenComponent = (props) => {
   return (
@@ -10,8 +14,23 @@ const FiltersScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-FiltersScreen.navigationOptions = {
-  headerTitle: "Filter Meals",
+FiltersScreen.navigationOptions = (navigationData) => {
+  return {
+    headerTitle: "Filter Meals",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Menu"
+          iconName="ios-menu"
+          onPress={() => {
+            (
+              navigationData.navigation as any as NavigationDrawerProp<{}>
+            ).toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 export default FiltersScreen;
