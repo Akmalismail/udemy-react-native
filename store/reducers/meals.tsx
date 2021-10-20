@@ -1,6 +1,8 @@
 import { MEALS } from '../../data/dummy-data';
 import Meal from '../../models/meal';
-import { TOGGLE_FAVORITE, ToggleFavoriteAction } from '../actions/meals';
+import {
+    SET_FILTERS, SetFiltersAction, TOGGLE_FAVORITE, ToggleFavoriteAction
+} from '../actions/meals';
 
 type MealState = {
   meals: Meal[];
@@ -14,7 +16,10 @@ const initialState: MealState = {
   favoriteMeals: [],
 };
 
-const mealsReducer = (state = initialState, action: ToggleFavoriteAction) => {
+const mealsReducer = (
+  state = initialState,
+  action: ToggleFavoriteAction | SetFiltersAction
+) => {
   switch (action.type) {
     case TOGGLE_FAVORITE:
       const existingIndex = state.favoriteMeals.findIndex(
@@ -27,10 +32,35 @@ const mealsReducer = (state = initialState, action: ToggleFavoriteAction) => {
         return { ...state, favoriteMeals: updatedFavoriteMeals };
       } else {
         const meal = state.meals.find((meal) => meal.id === action.mealId);
-        if (meal) {
-          return { ...state, favoriteMeals: state.favoriteMeals.concat(meal) };
+        if (meal === undefined) {
+          return state;
         }
+
+        return { ...state, favoriteMeals: state.favoriteMeals.concat(meal) };
       }
+    case SET_FILTERS:
+      const appliedFilters = action.filters;
+      const updatedFilteredMeals = state.meals.filter((meal) => {
+        if (appliedFilters.glutenFree && !meal.isGlutenFree) {
+          return false;
+        }
+
+        if (appliedFilters.lactoseFree && !meal.isLactoseFree) {
+          return false;
+        }
+
+        if (appliedFilters.vegan && !meal.isVegan) {
+          return false;
+        }
+
+        if (appliedFilters.vegetarian && !meal.isVegetarian) {
+          return false;
+        }
+
+        return true;
+      });
+
+      return { ...state, filteredMeals: updatedFilteredMeals };
     default:
       return state;
   }

@@ -6,6 +6,7 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import CustomHeaderButton from '../components/CustomHeaderButton';
 import Colors from '../constants/Colors';
+import { FilterSettings } from '../store/actions/meals';
 
 type FilterSwitchProps = {
   label: string;
@@ -36,7 +37,7 @@ const FiltersScreen: NavigationStackScreenComponent = (props) => {
   const [isVegetarian, setIsVegetarian] = useState(false);
 
   const saveFilters = useCallback(() => {
-    const appliedFilters = {
+    const appliedFilters: FilterSettings = {
       glutenFree: isGlutenFree,
       lactoseFree: isLactoseFree,
       vegan: isVegan,

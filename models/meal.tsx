@@ -11,7 +11,7 @@ class Meal {
   isGlutenFree: boolean;
   isVegan: boolean;
   isVegetarian: boolean;
-  isLactose: boolean;
+  isLactoseFree: boolean;
 
   constructor(
     id: string,
@@ -40,7 +40,7 @@ class Meal {
     this.isGlutenFree = isGlutenFree;
     this.isVegan = isVegan;
     this.isVegetarian = isVegetarian;
-    this.isLactose = isLactose;
+    this.isLactoseFree = isLactose;
   }
 }
 
