@@ -1,7 +1,6 @@
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
@@ -14,6 +13,8 @@ enableScreens();
 const rootReducer = combineReducers({
   meals: mealsReducer,
 });
+export type RootState = ReturnType<typeof rootReducer>;
+
 const store = createStore(rootReducer);
 
 const fetchFonts = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { DrawerActions, NavigationDrawerProp } from 'react-navigation-drawer';
+import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
