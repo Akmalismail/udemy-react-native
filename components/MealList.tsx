@@ -3,7 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationParams, NavigationRoute } from 'react-navigation';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+import { useSelector } from 'react-redux';
 
+import { RootState } from '../App';
 import Meal from '../models/meal';
 import MealItem from './MealItem';
 
@@ -13,6 +15,10 @@ type MealListProps = {
 };
 
 const MealList = (props: MealListProps) => {
+  const favoriteMeals = useSelector<RootState, Meal[]>(
+    (state) => state.meals.favoriteMeals
+  );
+
   const renderMealItem = ({ item }: { item: Meal }) => {
     return (
       <MealItem
@@ -23,6 +29,7 @@ const MealList = (props: MealListProps) => {
             params: {
               mealId: item.id,
               mealTitle: item.title,
+              isFavorite: favoriteMeals.some((meal) => meal.id === item.id),
             },
           });
         }}
