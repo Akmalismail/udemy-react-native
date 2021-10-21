@@ -7,7 +7,7 @@ import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import Product from '../../models/product';
 
-const ProductsOverviewScreen: NavigationStackScreenComponent = () => {
+const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   const products = useSelector<RootState, Product[]>(
     (state) => state.products.availableProducts
   );
@@ -19,7 +19,12 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = () => {
       renderItem={({ item }) => (
         <ProductItem
           item={item}
-          onViewDetail={() => {}}
+          onViewDetail={() => {
+            props.navigation.navigate("ProductDetail", {
+              productId: item.id,
+              productTitle: item.title,
+            });
+          }}
           onAddToCard={() => {}}
         />
       )}

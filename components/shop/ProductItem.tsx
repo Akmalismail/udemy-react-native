@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import {
+    Button, Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View
+} from 'react-native';
 
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
@@ -11,22 +13,42 @@ type ProductItemProps = {
 };
 
 const ProductItem = ({ item, onViewDetail, onAddToCard }: ProductItemProps) => {
+  let TouchableComponent: any = TouchableOpacity;
+
+  if (
+    Platform.OS === "android" &&
+    TouchableNativeFeedback.canUseNativeForeground() &&
+    Platform.Version >= 21
+  ) {
+    TouchableComponent = TouchableNativeFeedback;
+  }
+
   return (
     <View style={styles.product}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: item.imageUrl }} />
-      </View>
-      <View style={styles.detail}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-      </View>
-      <View style={styles.actions}>
-        <Button
-          color={Colors.primary}
-          title="View Details"
-          onPress={onViewDetail}
-        />
-        <Button color={Colors.primary} title="To Card" onPress={onAddToCard} />
+      <View style={styles.touchable}>
+        <TouchableComponent onPress={onViewDetail} useForeground={true}>
+          <View>
+            <View style={styles.imageContainer}>
+              <Image style={styles.image} source={{ uri: item.imageUrl }} />
+            </View>
+            <View style={styles.detail}>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+            </View>
+            <View style={styles.actions}>
+              <Button
+                color={Colors.primary}
+                title="View Details"
+                onPress={onViewDetail}
+              />
+              <Button
+                color={Colors.primary}
+                title="To Card"
+                onPress={onAddToCard}
+              />
+            </View>
+          </View>
+        </TouchableComponent>
       </View>
     </View>
   );
@@ -45,6 +67,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 300,
     margin: 20,
+  },
+  touchable: {
+    overflow: "hidden",
+    borderRadius: 10,
   },
   imageContainer: {
     width: "100%",
