@@ -1,3 +1,5 @@
+import Product from '../models/product';
+
 const PRODUCTS = [
   new Product(
     "p1",

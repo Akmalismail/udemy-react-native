@@ -1,4 +1,5 @@
 import PRODUCTS from '../../data/dummy-data';
+import Product from '../../models/product';
 
 export type ProductState = {
   availableProducts: Product[];
