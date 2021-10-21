@@ -4,6 +4,7 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
+import ProductItem from '../../components/shop/ProductItem';
 import Product from '../../models/product';
 
 const ProductsOverviewScreen: NavigationStackScreenComponent = () => {
@@ -15,7 +16,13 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = () => {
     <FlatList
       data={products}
       keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <Text>{item.title}</Text>}
+      renderItem={({ item }) => (
+        <ProductItem
+          item={item}
+          onViewDetail={() => {}}
+          onAddToCard={() => {}}
+        />
+      )}
     />
   );
 };
