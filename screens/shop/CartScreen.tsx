@@ -1,12 +1,13 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
+import CartItem from '../../components/shop/CartItem';
 import Colors from '../../constants/Colors';
-import CartItem from '../../models/cart-item';
+import CartItemType from '../../models/cart-item';
 
-type TransformedCartItems = CartItem & {
+type TransformedCartItems = CartItemType & {
   productId: string;
 };
 
@@ -44,9 +45,18 @@ const CartScreen = () => {
           onPress={() => {}}
         />
       </View>
-      <View>
-        <Text>CART ITEMS</Text>
-      </View>
+      <FlatList
+        data={cartItems}
+        keyExtractor={(item) => item.productId}
+        renderItem={(itemData) => (
+          <CartItem
+            quantity={itemData.item.quantity}
+            title={itemData.item.productTitle}
+            amount={itemData.item.sum}
+            onRemove={() => {}}
+          />
+        )}
+      />
     </View>
   );
 };
