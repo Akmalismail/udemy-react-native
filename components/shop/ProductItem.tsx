@@ -5,6 +5,7 @@ import {
 
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import { AddToCartAction } from '../../store/actions/cart';
 
 type ProductItemProps = {
   item: Product;
@@ -43,7 +44,7 @@ const ProductItem = ({ item, onViewDetail, onAddToCard }: ProductItemProps) => {
               />
               <Button
                 color={Colors.primary}
-                title="To Card"
+                title="Add To Cart"
                 onPress={onAddToCard}
               />
             </View>
