@@ -1,5 +1,7 @@
 import CartItem from '../../models/cart-item';
-import { AddToCartAction } from '../actions/cart';
+import {
+    ADD_TO_CART, AddToCartAction, REMOVE_FROM_CART, RemoveFromCartAction
+} from '../actions/cart';
 
 export type CartState = {
   items: Record<string, CartItem>;
@@ -11,9 +13,12 @@ const initialState: CartState = {
   totalAmount: 0,
 };
 
-export default (state = initialState, action: AddToCartAction): CartState => {
+export default (
+  state = initialState,
+  action: AddToCartAction | RemoveFromCartAction
+): CartState => {
   switch (action.type) {
-    case "ADD_TO_CART":
+    case ADD_TO_CART:
       const addedProduct = action.product;
       const productPrice = addedProduct.price;
       const productTitle = addedProduct.title;
@@ -42,6 +47,35 @@ export default (state = initialState, action: AddToCartAction): CartState => {
         ...state,
         items: { ...state.items, [addedProduct.id]: updatedOrNewCartItem },
         totalAmount: state.totalAmount + productPrice,
+      };
+    case REMOVE_FROM_CART:
+      const selectedProduct = state.items[action.productId];
+      const currentQuantity = selectedProduct.quantity;
+      let updatedCartItems: { [x: string]: CartItem };
+
+      if (currentQuantity > 1) {
+        // need to reduce it
+        const updatedCartItem = new CartItem(
+          selectedProduct.quantity - 1,
+          selectedProduct.productPrice,
+          selectedProduct.productTitle,
+          selectedProduct.sum - selectedProduct.productPrice
+        );
+        updatedCartItems = {
+          ...state.items,
+          [action.productId]: updatedCartItem,
+        };
+      } else {
+        // need to erase it
+        updatedCartItems = { ...state.items };
+        delete updatedCartItems[action.productId];
+      }
+
+      return {
+        // no need because no additional data
+        ...state,
+        items: updatedCartItems,
+        totalAmount: state.totalAmount - selectedProduct.productPrice,
       };
     default:
       return state;

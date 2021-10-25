@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
 import CartItem from '../../components/shop/CartItem';
 import Colors from '../../constants/Colors';
 import CartItemType from '../../models/cart-item';
+import * as cartActions from '../../store/actions/cart';
 
 type TransformedCartItems = CartItemType & {
   productId: string;
@@ -28,8 +29,12 @@ const CartScreen = () => {
       });
     }
 
-    return transformedCartItems;
+    return transformedCartItems.sort((a, b) =>
+      a.productId > b.productId ? 1 : -1
+    );
   });
+
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.screen}>
@@ -53,7 +58,9 @@ const CartScreen = () => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
-            onRemove={() => {}}
+            onRemove={() => {
+              dispatch(cartActions.removeFromCart(itemData.item.productId));
+            }}
           />
         )}
       />
