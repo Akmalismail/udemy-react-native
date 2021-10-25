@@ -7,6 +7,7 @@ import CartItem from '../../components/shop/CartItem';
 import Colors from '../../constants/Colors';
 import CartItemType from '../../models/cart-item';
 import * as cartActions from '../../store/actions/cart';
+import * as orderActions from '../../store/actions/orders';
 
 type TransformedCartItems = CartItemType & {
   productId: string;
@@ -47,7 +48,9 @@ const CartScreen = () => {
           color={Colors.accent}
           title="Order Now"
           disabled={cartItems.length === 0}
-          onPress={() => {}}
+          onPress={() => {
+            dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
+          }}
         />
       </View>
       <FlatList
