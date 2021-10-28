@@ -19,7 +19,7 @@ const UserProductsScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useDispatch();
   const editProductHandler = (id: string) => {
     props.navigation.navigate("EditProduct", {
-      pid: id,
+      productId: id,
     });
   };
 
