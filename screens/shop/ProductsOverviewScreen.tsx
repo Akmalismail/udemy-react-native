@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +42,19 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
 ProductsOverviewScreen.navigationOptions = (navigationData) => {
   return {
     headerTitle: "All Products",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            (
+              navigationData.navigation as unknown as NavigationDrawerProp
+            ).toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item

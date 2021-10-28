@@ -71,6 +71,10 @@ const CartScreen = () => {
   );
 };
 
+CartScreen.navigationOptions = {
+  headerTitle: "Your Cart",
+};
+
 export default CartScreen;
 
 const styles = StyleSheet.create({

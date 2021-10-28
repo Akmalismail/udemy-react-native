@@ -2,7 +2,7 @@ import Order from '../../models/order';
 import { ADD_ORDER, AddOrderAction } from '../actions/orders';
 
 export type OrderState = {
-  orders: unknown[];
+  orders: Order[];
 };
 
 const initialState: OrderState = {
