@@ -3,6 +3,7 @@ import {
     ADD_TO_CART, AddToCartAction, REMOVE_FROM_CART, RemoveFromCartAction
 } from '../actions/cart';
 import { ADD_ORDER, AddOrderAction } from '../actions/orders';
+import { DELETE_PRODUCT, DeleteProductAction } from '../actions/products';
 
 export type CartState = {
   items: Record<string, CartItem>;
@@ -16,7 +17,11 @@ const initialState: CartState = {
 
 export default (
   state = initialState,
-  action: AddToCartAction | RemoveFromCartAction | AddOrderAction
+  action:
+    | AddToCartAction
+    | RemoveFromCartAction
+    | AddOrderAction
+    | DeleteProductAction
 ): CartState => {
   switch (action.type) {
     case ADD_TO_CART:
@@ -80,6 +85,20 @@ export default (
       };
     case ADD_ORDER:
       return initialState;
+    case DELETE_PRODUCT:
+      if (!state.items[action.pid]) {
+        return state;
+      }
+
+      const updatedItems = state.items;
+      const itemTotal = state.items[action.pid].sum;
+      delete updatedItems[action.pid];
+
+      return {
+        ...state,
+        items: updatedItems,
+        totalAmount: state.totalAmount - itemTotal,
+      };
     default:
       return state;
   }

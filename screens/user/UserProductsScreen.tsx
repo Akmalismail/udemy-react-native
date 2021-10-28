@@ -3,18 +3,20 @@ import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import * as productsActions from '../../store/actions/products';
 
 const UserProductsScreen: NavigationStackScreenComponent = () => {
   const userProducts = useSelector<RootState, Product[]>(
     (state) => state.products.userProducts
   );
+  const dispatch = useDispatch();
 
   return (
     <FlatList
@@ -27,7 +29,13 @@ const UserProductsScreen: NavigationStackScreenComponent = () => {
           onSelect={() => {}}
         >
           <Button color={Colors.primary} title="Edit" onPress={() => {}} />
-          <Button color={Colors.primary} title="Delete" onPress={() => {}} />
+          <Button
+            color={Colors.primary}
+            title="Delete"
+            onPress={() => {
+              dispatch(productsActions.deleteProduct(itemData.item.id));
+            }}
+          />
         </ProductItem>
       )}
     />
