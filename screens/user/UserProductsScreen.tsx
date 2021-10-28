@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
+import Colors from '../../constants/Colors';
 import Product from '../../models/product';
 
 const UserProductsScreen: NavigationStackScreenComponent = () => {
@@ -23,9 +24,11 @@ const UserProductsScreen: NavigationStackScreenComponent = () => {
         <ProductItem
           key={itemData.item.id}
           item={itemData.item}
-          onViewDetail={() => {}}
-          onAddToCard={() => {}}
-        />
+          onSelect={() => {}}
+        >
+          <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+          <Button color={Colors.primary} title="Delete" onPress={() => {}} />
+        </ProductItem>
       )}
     />
   );

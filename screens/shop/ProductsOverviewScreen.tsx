@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
+import Colors from '../../constants/Colors';
 import Product from '../../models/product';
 import { addToCart } from '../../store/actions/cart';
 
@@ -17,6 +18,13 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   );
   const dispatch = useDispatch();
 
+  const selectItemHandler = (item: Product) => {
+    props.navigation.navigate("ProductDetail", {
+      productId: item.id,
+      productTitle: item.title,
+    });
+  };
+
   return (
     <FlatList
       data={products}
@@ -24,16 +32,25 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
       renderItem={({ item }) => (
         <ProductItem
           item={item}
-          onViewDetail={() => {
-            props.navigation.navigate("ProductDetail", {
-              productId: item.id,
-              productTitle: item.title,
-            });
+          onSelect={() => {
+            selectItemHandler(item);
           }}
-          onAddToCard={() => {
-            dispatch(addToCart(item));
-          }}
-        />
+        >
+          <Button
+            color={Colors.primary}
+            title="View Details"
+            onPress={() => {
+              selectItemHandler(item);
+            }}
+          />
+          <Button
+            color={Colors.primary}
+            title="Add To Cart"
+            onPress={() => {
+              dispatch(addToCart(item));
+            }}
+          />
+        </ProductItem>
       )}
     />
   );

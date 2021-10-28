@@ -1,19 +1,17 @@
 import React from 'react';
 import {
-    Button, Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View
+    Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View
 } from 'react-native';
 
-import Colors from '../../constants/Colors';
 import Product from '../../models/product';
-import { AddToCartAction } from '../../store/actions/cart';
 
 type ProductItemProps = {
   item: Product;
-  onViewDetail: () => void;
-  onAddToCard: () => void;
+  onSelect: () => void;
+  children?: React.ReactNode;
 };
 
-const ProductItem = ({ item, onViewDetail, onAddToCard }: ProductItemProps) => {
+const ProductItem = ({ item, onSelect, children }: ProductItemProps) => {
   let TouchableComponent: any = TouchableOpacity;
 
   if (
@@ -27,7 +25,7 @@ const ProductItem = ({ item, onViewDetail, onAddToCard }: ProductItemProps) => {
   return (
     <View style={styles.product}>
       <View style={styles.touchable}>
-        <TouchableComponent onPress={onViewDetail} useForeground={true}>
+        <TouchableComponent onPress={onSelect} useForeground={true}>
           <View>
             <View style={styles.imageContainer}>
               <Image style={styles.image} source={{ uri: item.imageUrl }} />
@@ -36,18 +34,7 @@ const ProductItem = ({ item, onViewDetail, onAddToCard }: ProductItemProps) => {
               <Text style={styles.title}>{item.title}</Text>
               <Text style={styles.price}>${item.price.toFixed(2)}</Text>
             </View>
-            <View style={styles.actions}>
-              <Button
-                color={Colors.primary}
-                title="View Details"
-                onPress={onViewDetail}
-              />
-              <Button
-                color={Colors.primary}
-                title="Add To Cart"
-                onPress={onAddToCard}
-              />
-            </View>
+            <View style={styles.actions}>{children}</View>
           </View>
         </TouchableComponent>
       </View>
