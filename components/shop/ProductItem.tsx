@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 
 import Product from '../../models/product';
+import Card from '../ui/Card';
 
 type ProductItemProps = {
   item: Product;
@@ -23,7 +24,7 @@ const ProductItem = ({ item, onSelect, children }: ProductItemProps) => {
   }
 
   return (
-    <View style={styles.product}>
+    <Card style={styles.product}>
       <View style={styles.touchable}>
         <TouchableComponent onPress={onSelect} useForeground={true}>
           <View>
@@ -38,7 +39,7 @@ const ProductItem = ({ item, onSelect, children }: ProductItemProps) => {
           </View>
         </TouchableComponent>
       </View>
-    </View>
+    </Card>
   );
 };
 
@@ -46,13 +47,6 @@ export default ProductItem;
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
     height: 300,
     margin: 20,
   },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -17,10 +17,24 @@ const UserProductsScreen: NavigationStackScreenComponent = (props) => {
     (state) => state.products.userProducts
   );
   const dispatch = useDispatch();
+
   const editProductHandler = (id: string) => {
     props.navigation.navigate("EditProduct", {
       productId: id,
     });
+  };
+
+  const deleteHandler = (id: string) => {
+    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => {
+          dispatch(productsActions.deleteProduct(id));
+        },
+      },
+    ]);
   };
 
   return (
@@ -45,9 +59,7 @@ const UserProductsScreen: NavigationStackScreenComponent = (props) => {
           <Button
             color={Colors.primary}
             title="Delete"
-            onPress={() => {
-              dispatch(productsActions.deleteProduct(itemData.item.id));
-            }}
+            onPress={deleteHandler.bind(this, itemData.item.id)}
           />
         </ProductItem>
       )}

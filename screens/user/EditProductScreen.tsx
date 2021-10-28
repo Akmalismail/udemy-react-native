@@ -27,7 +27,6 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   );
 
   const submitHandler = useCallback(() => {
-    console.log("submit!", prodId, title, imageUrl, description, price);
     if (editedProduct) {
       dispatch(
         productActions.updateProduct(prodId, title, imageUrl, description)
@@ -37,6 +36,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
         productActions.createProduct(title, imageUrl, +price, description)
       );
     }
+    props.navigation.goBack();
   }, [dispatch, prodId, title, imageUrl, description, price]);
 
   useEffect(() => {
