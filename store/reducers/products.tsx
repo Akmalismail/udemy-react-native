@@ -1,6 +1,9 @@
 import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/product';
-import { DELETE_PRODUCT, DeleteProductAction } from '../actions/products';
+import {
+    CREATE_PRODUCT, CreateProductAction, DELETE_PRODUCT, DeleteProductAction, UPDATE_PRODUCT,
+    UpdateProductAction
+} from '../actions/products';
 
 export type ProductState = {
   availableProducts: Product[];
@@ -14,9 +17,51 @@ const initialState: ProductState = {
 
 export default (
   state = initialState,
-  action: DeleteProductAction
+  action: DeleteProductAction | CreateProductAction | UpdateProductAction
 ): ProductState => {
   switch (action.type) {
+    case CREATE_PRODUCT:
+      const newProduct = new Product(
+        new Date().toString(),
+        "u1",
+        action.productData.title,
+        action.productData.imageUrl,
+        action.productData.description,
+        action.productData.price
+      );
+
+      return {
+        ...state,
+        availableProducts: state.availableProducts.concat(newProduct),
+        userProducts: state.userProducts.concat(newProduct),
+      };
+    case UPDATE_PRODUCT:
+      const userProductIndex = state.userProducts.findIndex(
+        (product) => product.id === action.pid
+      );
+
+      const updatedProduct = new Product(
+        action.pid,
+        state.userProducts[userProductIndex].ownerId,
+        action.productData.title,
+        action.productData.imageUrl,
+        action.productData.description,
+        state.userProducts[userProductIndex].price
+      );
+      const updatedUserProducts = [...state.userProducts];
+      updatedUserProducts[userProductIndex] = updatedProduct;
+
+      const availableProductIndex = state.availableProducts.findIndex(
+        (product) => product.id === action.pid
+      );
+      const updatedAvailableProducts = [...state.availableProducts];
+      updatedAvailableProducts[availableProductIndex] = updatedProduct;
+
+      return {
+        ...state,
+        availableProducts: updatedAvailableProducts,
+        userProducts: updatedUserProducts,
+      };
     case DELETE_PRODUCT:
       return {
         ...state,

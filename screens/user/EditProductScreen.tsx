@@ -3,13 +3,15 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Product from '../../models/product';
+import * as productActions from '../../store/actions/products';
 
 const EditProductScreen: NavigationStackScreenComponent = (props) => {
+  const dispatch = useDispatch();
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector<RootState, Product | undefined>((state) =>
     state.products.userProducts.find((product) => product.id === prodId)
@@ -25,8 +27,17 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   );
 
   const submitHandler = useCallback(() => {
-    console.log("Submitting!");
-  }, []);
+    console.log("submit!", prodId, title, imageUrl, description, price);
+    if (editedProduct) {
+      dispatch(
+        productActions.updateProduct(prodId, title, imageUrl, description)
+      );
+    } else {
+      dispatch(
+        productActions.createProduct(title, imageUrl, +price, description)
+      );
+    }
+  }, [dispatch, prodId, title, imageUrl, description, price]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
