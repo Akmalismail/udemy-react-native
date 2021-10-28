@@ -7,7 +7,8 @@ type CartItemProps = {
   quantity: number;
   title: string;
   amount: number;
-  onRemove: () => void;
+  onRemove?: () => void;
+  deletable?: boolean;
 };
 
 const CartItem = (props: CartItemProps) => {
@@ -19,13 +20,15 @@ const CartItem = (props: CartItemProps) => {
       </View>
       <View style={styles.itemData}>
         <Text style={styles.mainText}>${props.amount.toFixed(2)}</Text>
-        <Pressable style={styles.deleteButton} onPress={props.onRemove}>
-          <Ionicons
-            name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-            size={23}
-            color="red"
-          />
-        </Pressable>
+        {props.deletable && (
+          <Pressable style={styles.deleteButton} onPress={props.onRemove}>
+            <Ionicons
+              name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+              size={23}
+              color="red"
+            />
+          </Pressable>
+        )}
       </View>
     </View>
   );

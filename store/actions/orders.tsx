@@ -1,4 +1,5 @@
 import CartItem from '../../models/cart-item';
+import { TransformedCartItems } from '../../screens/shop/CartScreen';
 
 // identifier
 export const ADD_ORDER = "ADD_ORDER";
@@ -7,14 +8,14 @@ export const ADD_ORDER = "ADD_ORDER";
 export type AddOrderAction = {
   type: typeof ADD_ORDER;
   orderData: {
-    items: CartItem[];
+    items: TransformedCartItems[];
     amount: number;
   };
 };
 
 // action
 export const addOrder = (
-  cartItems: CartItem[],
+  cartItems: TransformedCartItems[],
   totalAmount: number
 ): AddOrderAction => {
   return {

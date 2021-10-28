@@ -9,7 +9,7 @@ import CartItemType from '../../models/cart-item';
 import * as cartActions from '../../store/actions/cart';
 import * as orderActions from '../../store/actions/orders';
 
-type TransformedCartItems = CartItemType & {
+export type TransformedCartItems = CartItemType & {
   productId: string;
 };
 
@@ -61,6 +61,7 @@ const CartScreen = () => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
+            deletable
             onRemove={() => {
               dispatch(cartActions.removeFromCart(itemData.item.productId));
             }}
