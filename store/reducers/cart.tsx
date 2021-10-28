@@ -2,6 +2,7 @@ import CartItem from '../../models/cart-item';
 import {
     ADD_TO_CART, AddToCartAction, REMOVE_FROM_CART, RemoveFromCartAction
 } from '../actions/cart';
+import { ADD_ORDER, AddOrderAction } from '../actions/orders';
 
 export type CartState = {
   items: Record<string, CartItem>;
@@ -15,7 +16,7 @@ const initialState: CartState = {
 
 export default (
   state = initialState,
-  action: AddToCartAction | RemoveFromCartAction
+  action: AddToCartAction | RemoveFromCartAction | AddOrderAction
 ): CartState => {
   switch (action.type) {
     case ADD_TO_CART:
@@ -77,6 +78,8 @@ export default (
         items: updatedCartItems,
         totalAmount: state.totalAmount - selectedProduct.productPrice,
       };
+    case ADD_ORDER:
+      return initialState;
     default:
       return state;
   }
