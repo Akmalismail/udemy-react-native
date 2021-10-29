@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -18,6 +18,8 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   );
 
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
+  const [titleIsValid, setTitleIsValid] = useState(false);
+
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
   );
@@ -27,6 +29,13 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   );
 
   const submitHandler = useCallback(() => {
+    if (!titleIsValid) {
+      Alert.alert("Wrong input!", "Please check the errors in the form.", [
+        { text: "Okay" },
+      ]);
+      return;
+    }
+
     if (editedProduct) {
       dispatch(
         productActions.updateProduct(prodId, title, imageUrl, description)
@@ -43,6 +52,15 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  const titleChangeHandler = (text: string) => {
+    if (text.trim().length === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle(text);
+  };
+
   return (
     <ScrollView>
       <View style={styles.form}>
@@ -51,7 +69,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={titleChangeHandler}
             keyboardType="default"
             autoCapitalize="sentences"
             autoCorrect
@@ -59,6 +77,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
             onEndEditing={() => console.log("onEndEditing")}
             onSubmitEditing={() => console.log("onSubmitEditing")}
           />
+          {!titleIsValid && <Text>Please enter valid title!</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
