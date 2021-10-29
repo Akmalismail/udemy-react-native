@@ -11,6 +11,7 @@ export type DeleteProductAction = {
 export type CreateProductAction = {
   type: typeof CREATE_PRODUCT;
   productData: {
+    id: string;
     title: string;
     description: string;
     imageUrl: string;
@@ -40,15 +41,37 @@ export const createProduct = (
   imageUrl: string,
   price: number,
   description: string
-): CreateProductAction => {
-  return {
-    type: CREATE_PRODUCT,
-    productData: {
-      title,
-      imageUrl,
-      price,
-      description,
-    },
+): ((dispatch: (action: CreateProductAction) => void) => Promise<void>) => {
+  return async (dispatch) => {
+    // any async code you want!
+    const response = await fetch(
+      "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price,
+        }),
+      }
+    );
+
+    const responseData = await response.json();
+
+    dispatch({
+      type: CREATE_PRODUCT,
+      productData: {
+        id: responseData.name,
+        title,
+        imageUrl,
+        price,
+        description,
+      },
+    });
   };
 };
 
