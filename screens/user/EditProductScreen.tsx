@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
 import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -10,6 +10,49 @@ import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Product from '../../models/product';
 import * as productActions from '../../store/actions/products';
 
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
+type FormReducerAction = {
+  type: typeof FORM_INPUT_UPDATE;
+  value: string;
+  isValid: boolean;
+  input: "title" | "imageUrl" | "description" | "price";
+};
+type FormValidation = {
+  inputValues: {
+    title: string;
+    imageUrl: string;
+    description: string;
+    price: number | null;
+  };
+  inputValidities: {
+    input: boolean;
+    imageUrl: boolean;
+    description: boolean;
+    price: boolean;
+  };
+  formIsValid: boolean;
+};
+
+const formReducer = (state: any, action: FormReducerAction): FormValidation => {
+  // if (action.type === REDUCER_UPDATE) {
+  return {
+    inputValues: {
+      title: "",
+      imageUrl: "",
+      description: "",
+      price: null,
+    },
+    inputValidities: {
+      input: false,
+      imageUrl: false,
+      description: false,
+      price: true,
+    },
+    formIsValid: false,
+  };
+  // }
+};
+
 const EditProductScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useDispatch();
   const prodId = props.navigation.getParam("productId");
@@ -17,16 +60,21 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
     state.products.userProducts.find((product) => product.id === prodId)
   );
 
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
-  const [titleIsValid, setTitleIsValid] = useState(false);
-
-  const [imageUrl, setImageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : ""
-  );
-  const [price, setPrice] = useState(editedProduct ? editedProduct.price : "");
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : ""
-  );
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      title: editedProduct ? editedProduct.title : "",
+      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      description: editedProduct ? editedProduct.description : "",
+      price: null,
+    },
+    inputValidities: {
+      input: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      description: editedProduct ? true : false,
+      price: true,
+    },
+    formIsValid: editedProduct ? true : false,
+  });
 
   const submitHandler = useCallback(() => {
     if (!titleIsValid) {
@@ -46,19 +94,20 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
       );
     }
     props.navigation.goBack();
-  }, [dispatch, prodId, title, imageUrl, description, price]);
+  }, [dispatch, prodId, title, imageUrl, description, price, titleIsValid]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
   const titleChangeHandler = (text: string) => {
-    if (text.trim().length === 0) {
-      setTitleIsValid(false);
-    } else {
-      setTitleIsValid(true);
-    }
-    setTitle(text);
+    let isValid = text.trim().length > 0 ? true : false;
+    dispatchFormState({
+      type: FORM_INPUT_UPDATE,
+      value: text,
+      isValid: isValid,
+      input: "title",
+    });
   };
 
   return (
