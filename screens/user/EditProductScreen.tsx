@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { NavigationStackScreenComponent, useHeaderHeight } from 'react-navigation-stack';
+import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../App';
@@ -132,8 +132,6 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
     },
     [dispatchFormState]
   );
-
-  const headerHeight = useHeaderHeight();
 
   return (
     <KeyboardAvoidingView
