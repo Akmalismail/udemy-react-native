@@ -1,44 +1,71 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { StyleSheet, Text, TextInputProps, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 type InputProps = TextInputProps & {
+  id: string;
   label: string;
   errorText: string;
+  onInputChange?: (id: string, text: string, isValid: boolean) => void;
   initialValue?: string;
-  initiallyValid: boolean;
-  required: boolean;
-  email: boolean;
-  min: number;
-  max: number;
-  minLength: number;
+  initiallyValid?: boolean;
+  required?: boolean;
+  email?: boolean;
+  min?: number;
+  max?: number;
+  minLength?: number;
 };
 
 const INPUT_CHANGE = "INPUT_CHANGE";
+const INPUT_BLUR = "INPUT_BLUR";
 type InputState = {
   value: string;
   isValid: boolean;
   touched: boolean;
 };
-type InputAction = {
+type InputChangeAction = {
   type: typeof INPUT_CHANGE;
   value: string;
   isValid: boolean;
 };
-const inputReducer = (state: InputState, action: InputAction): InputState => {
+type InputBlurAction = {
+  type: typeof INPUT_BLUR;
+};
+const inputReducer = (
+  state: InputState,
+  action: InputChangeAction | InputBlurAction
+): InputState => {
   switch (action.type) {
     case INPUT_CHANGE:
+      return {
+        ...state,
+        value: action.value,
+        isValid: action.isValid,
+      };
+    case INPUT_BLUR:
+      return {
+        ...state,
+        touched: true,
+      };
     default:
       return state;
   }
 };
 
 const Input = (props: InputProps) => {
-  const [state, dispatch] = useReducer(inputReducer, {
+  const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue ? props.initialValue : "",
-    isValid: props.initiallyValid,
+    isValid: !!props.initiallyValid,
     touched: false,
   });
+
+  const { id, onInputChange } = props;
+
+  useEffect(() => {
+    if (inputState.touched && onInputChange) {
+      onInputChange(id, inputState.value, inputState.isValid);
+    }
+  }, [inputState, onInputChange, id]);
 
   const textChangeHandler = (text: string) => {
     const emailRegex =
@@ -63,16 +90,21 @@ const Input = (props: InputProps) => {
     dispatch({ type: INPUT_CHANGE, value: text, isValid: isValid });
   };
 
+  const lostFocusHandler = () => {
+    dispatch({ type: INPUT_BLUR });
+  };
+
   return (
     <View style={styles.formControl}>
       <Text style={styles.label}>{props.label}</Text>
       <TextInput
         {...props}
         style={styles.input}
-        value={state.value}
+        value={inputState.value}
         onChangeText={textChangeHandler}
+        onBlur={lostFocusHandler}
       />
-      {!state.isValid && <Text>{props.errorText}</Text>}
+      {!inputState.isValid && <Text>{props.errorText}</Text>}
     </View>
   );
 };
