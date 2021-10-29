@@ -51,7 +51,13 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
           <TextInput
             style={styles.input}
             value={title}
-            onChange={(event) => setTitle(event.nativeEvent.text)}
+            onChangeText={(text) => setTitle(text)}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            onEndEditing={() => console.log("onEndEditing")}
+            onSubmitEditing={() => console.log("onSubmitEditing")}
           />
         </View>
         <View style={styles.formControl}>
@@ -59,7 +65,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
           <TextInput
             style={styles.input}
             value={imageUrl}
-            onChange={(event) => setImageUrl(event.nativeEvent.text)}
+            onChangeText={(text) => setImageUrl(text)}
           />
         </View>
         {editedProduct ? null : (
@@ -68,7 +74,8 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
             <TextInput
               style={styles.input}
               value={price.toString()}
-              onChange={(event) => setPrice(event.nativeEvent.text)}
+              onChangeText={(text) => setPrice(text)}
+              keyboardType="decimal-pad"
             />
           </View>
         )}
@@ -77,7 +84,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
           <TextInput
             style={styles.input}
             value={description}
-            onChange={(event) => setDescription(event.nativeEvent.text)}
+            onChangeText={(text) => setDescription(text)}
           />
         </View>
       </View>
