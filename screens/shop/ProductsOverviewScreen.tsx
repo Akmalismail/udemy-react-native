@@ -24,24 +24,39 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useDispatch();
 
   const loadProducts = useCallback(async () => {
+    console.log("loadProducts");
     setError(null);
     setIsLoading(true);
-    try {
-      await dispatch(
-        productActions.fetchProduct() as unknown as Promise<
-          typeof productActions.fetchProduct
-        >
-      );
-    } catch (error) {
-      console.error("dispatch(productActions.fetchProduct())", error);
-      setError((error as any).message);
-    }
-    setIsLoading(false);
+    // some delay
+    setTimeout(async () => {
+      try {
+        await dispatch(
+          productActions.fetchProduct() as unknown as Promise<
+            typeof productActions.fetchProduct
+          >
+        );
+      } catch (error) {
+        console.error("dispatch(productActions.fetchProduct())", error);
+        setError((error as any).message);
+      }
+      setIsLoading(false);
+    }, 2000);
   }, [dispatch, setIsLoading, setError]);
 
+  // refetch
   useEffect(() => {
-    loadProducts();
-  }, [dispatch, loadProducts]);
+    const willFocusSub = props.navigation.addListener(
+      "willFocus",
+      loadProducts
+    );
+    return () => {
+      willFocusSub.remove();
+    };
+  }, [loadProducts]);
+
+  // useEffect(() => {
+  //   loadProducts();
+  // }, [dispatch, loadProducts]);
 
   const selectItemHandler = (item: Product) => {
     props.navigation.navigate("ProductDetail", {
