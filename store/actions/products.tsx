@@ -36,43 +36,50 @@ export type UpdateProductAction = {
 };
 
 // action
-export const fetchProduct = (): ((
-  dispatch: (action: FetchProductAction) => void
-) => Promise<void>) => {
-  return async (dispatch) => {
+export const fetchProduct = () => {
+  return async (dispatch: (action: FetchProductAction) => void) => {
     // any async code you want!
-    const response = await fetch(
-      "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
-    );
-
-    const responseData: {
-      [key: string]: {
-        description: string;
-        imageUrl: string;
-        price: number;
-        title: string;
-      };
-    } = await response.json();
-
-    const loadedProducts: Product[] = [];
-
-    for (const key in responseData) {
-      loadedProducts.push(
-        new Product(
-          key,
-          "u1",
-          responseData[key].title,
-          responseData[key].imageUrl,
-          responseData[key].description,
-          responseData[key].price
-        )
+    try {
+      const response = await fetch(
+        "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
       );
-    }
 
-    dispatch({
-      type: SET_PRODUCT,
-      products: loadedProducts,
-    });
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+
+      const responseData: {
+        [key: string]: {
+          description: string;
+          imageUrl: string;
+          price: number;
+          title: string;
+        };
+      } = await response.json();
+
+      const loadedProducts: Product[] = [];
+
+      for (const key in responseData) {
+        loadedProducts.push(
+          new Product(
+            key,
+            "u1",
+            responseData[key].title,
+            responseData[key].imageUrl,
+            responseData[key].description,
+            responseData[key].price
+          )
+        );
+      }
+
+      dispatch({
+        type: SET_PRODUCT,
+        products: loadedProducts,
+      });
+    } catch (error) {
+      // send to custom analytic error
+      throw error;
+    }
   };
 };
 
@@ -88,8 +95,8 @@ export const createProduct = (
   imageUrl: string,
   price: number,
   description: string
-): ((dispatch: (action: CreateProductAction) => void) => Promise<void>) => {
-  return async (dispatch) => {
+) => {
+  return async (dispatch: (action: CreateProductAction) => void) => {
     // any async code you want!
     const response = await fetch(
       "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
