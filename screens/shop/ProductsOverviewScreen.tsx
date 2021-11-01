@@ -54,9 +54,9 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
     };
   }, [loadProducts]);
 
-  // useEffect(() => {
-  //   loadProducts();
-  // }, [dispatch, loadProducts]);
+  useEffect(() => {
+    loadProducts();
+  }, [dispatch, loadProducts]);
 
   const selectItemHandler = (item: Product) => {
     props.navigation.navigate("ProductDetail", {
