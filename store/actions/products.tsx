@@ -1,9 +1,16 @@
+import Product from '../../models/product';
+
 // identifier
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
+export const SET_PRODUCT = "SET_PRODUCT";
 
 // action types
+export type FetchProductAction = {
+  type: typeof SET_PRODUCT;
+  products: Product[];
+};
 export type DeleteProductAction = {
   type: typeof DELETE_PRODUCT;
   pid: string;
@@ -29,6 +36,46 @@ export type UpdateProductAction = {
 };
 
 // action
+export const fetchProduct = (): ((
+  dispatch: (action: FetchProductAction) => void
+) => Promise<void>) => {
+  return async (dispatch) => {
+    // any async code you want!
+    const response = await fetch(
+      "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json"
+    );
+
+    const responseData: {
+      [key: string]: {
+        description: string;
+        imageUrl: string;
+        price: number;
+        title: string;
+      };
+    } = await response.json();
+
+    const loadedProducts: Product[] = [];
+
+    for (const key in responseData) {
+      loadedProducts.push(
+        new Product(
+          key,
+          "u1",
+          responseData[key].title,
+          responseData[key].imageUrl,
+          responseData[key].description,
+          responseData[key].price
+        )
+      );
+    }
+
+    dispatch({
+      type: SET_PRODUCT,
+      products: loadedProducts,
+    });
+  };
+};
+
 export const deleteProduct = (productId: string): DeleteProductAction => {
   return {
     type: DELETE_PRODUCT,

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Button, FlatList, Platform, StyleSheet } from 'react-native';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -11,12 +11,16 @@ import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
 import { addToCart } from '../../store/actions/cart';
+import * as productActions from '../../store/actions/products';
 
 const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   const products = useSelector<RootState, Product[]>(
     (state) => state.products.availableProducts
   );
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(productActions.fetchProduct());
+  }, [dispatch]);
 
   const selectItemHandler = (item: Product) => {
     props.navigation.navigate("ProductDetail", {

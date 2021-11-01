@@ -1,8 +1,8 @@
 import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/product';
 import {
-    CREATE_PRODUCT, CreateProductAction, DELETE_PRODUCT, DeleteProductAction, UPDATE_PRODUCT,
-    UpdateProductAction
+    CREATE_PRODUCT, CreateProductAction, DELETE_PRODUCT, DeleteProductAction, FetchProductAction,
+    SET_PRODUCT, UPDATE_PRODUCT, UpdateProductAction
 } from '../actions/products';
 
 export type ProductState = {
@@ -17,9 +17,20 @@ const initialState: ProductState = {
 
 export default (
   state = initialState,
-  action: DeleteProductAction | CreateProductAction | UpdateProductAction
+  action:
+    | DeleteProductAction
+    | CreateProductAction
+    | UpdateProductAction
+    | FetchProductAction
 ): ProductState => {
   switch (action.type) {
+    case SET_PRODUCT:
+      return {
+        availableProducts: action.products,
+        userProducts: action.products.filter(
+          (product) => product.ownerId === "u1"
+        ),
+      };
     case CREATE_PRODUCT:
       const newProduct = new Product(
         action.productData.id,
