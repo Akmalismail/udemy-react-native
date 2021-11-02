@@ -17,6 +17,7 @@ import * as productActions from '../../store/actions/products';
 
 const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<null>();
   const products = useSelector<RootState, Product[]>(
     (state) => state.products.availableProducts
@@ -25,7 +26,7 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
 
   const loadProducts = useCallback(async () => {
     setError(null);
-    setIsLoading(true);
+    setIsRefreshing(true);
 
     try {
       await dispatch(
@@ -37,9 +38,8 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
       console.error("dispatch(productActions.fetchProduct())", error);
       setError((error as any).message);
     }
-
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing, setError]);
 
   // refetch
   useEffect(() => {
@@ -53,7 +53,10 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   }, [loadProducts]);
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
   const selectItemHandler = (item: Product) => {
@@ -94,6 +97,8 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (

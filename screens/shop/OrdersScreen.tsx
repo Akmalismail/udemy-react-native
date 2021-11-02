@@ -34,6 +34,7 @@ const OrdersScreen: NavigationStackScreenComponent = () => {
       })
       .catch((error) => {
         setError(error.message);
+        setIsLoading(false);
       });
   }, [dispatch]);
 
