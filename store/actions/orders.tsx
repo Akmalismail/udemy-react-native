@@ -1,8 +1,9 @@
-import CartItem from '../../models/cart-item';
+import Order from '../../models/order';
 import { TransformedCartItems } from '../../screens/shop/CartScreen';
 
 // identifier
 export const ADD_ORDER = "ADD_ORDER";
+export const SET_ORDERS = "SET_ORDERS";
 
 // action types
 export type AddOrderAction = {
@@ -14,8 +15,56 @@ export type AddOrderAction = {
     date: Date;
   };
 };
+export type FetchOrdersAction = {
+  type: typeof SET_ORDERS;
+  orders: Order[];
+};
 
 // action
+export const fetchOrders = () => {
+  return async (dispatch: (action: FetchOrdersAction) => void) => {
+    // any async code you want!
+    try {
+      const response = await fetch(
+        "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json"
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+
+      const responseData: {
+        [key: string]: {
+          cartItems: TransformedCartItems[];
+          date: string;
+          totalAmount: number;
+        };
+      } = await response.json();
+
+      const loadedOrders: Order[] = [];
+
+      for (const key in responseData) {
+        loadedOrders.push(
+          new Order(
+            key,
+            responseData[key].cartItems,
+            responseData[key].totalAmount,
+            new Date(responseData[key].date)
+          )
+        );
+      }
+
+      dispatch({
+        type: SET_ORDERS,
+        orders: loadedOrders,
+      });
+    } catch (error) {
+      // send to custom analytic error
+      throw error;
+    }
+  };
+};
+
 export const addOrder = (
   cartItems: TransformedCartItems[],
   totalAmount: number
@@ -32,7 +81,7 @@ export const addOrder = (
         body: JSON.stringify({
           cartItems,
           totalAmount,
-          data: date.toISOString(),
+          date: date.toISOString(),
         }),
       }
     );
