@@ -24,23 +24,21 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useDispatch();
 
   const loadProducts = useCallback(async () => {
-    console.log("loadProducts");
     setError(null);
     setIsLoading(true);
-    // some delay
-    setTimeout(async () => {
-      try {
-        await dispatch(
-          productActions.fetchProduct() as unknown as Promise<
-            typeof productActions.fetchProduct
-          >
-        );
-      } catch (error) {
-        console.error("dispatch(productActions.fetchProduct())", error);
-        setError((error as any).message);
-      }
-      setIsLoading(false);
-    }, 2000);
+
+    try {
+      await dispatch(
+        productActions.fetchProduct() as unknown as Promise<
+          typeof productActions.fetchProduct
+        >
+      );
+    } catch (error) {
+      console.error("dispatch(productActions.fetchProduct())", error);
+      setError((error as any).message);
+    }
+
+    setIsLoading(false);
   }, [dispatch, setIsLoading, setError]);
 
   // refetch
