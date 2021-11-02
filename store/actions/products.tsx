@@ -85,12 +85,16 @@ export const fetchProduct = () => {
 
 export const deleteProduct = (productId: string) => {
   return async (dispatch: (action: DeleteProductAction) => void) => {
-    await fetch(
+    const response = await fetch(
       `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`,
       {
         method: "DELETE",
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     dispatch({
       type: DELETE_PRODUCT,
@@ -145,7 +149,7 @@ export const updateProduct = (
   description: string
 ) => {
   return async (dispatch: (action: UpdateProductAction) => void) => {
-    await fetch(
+    const response = await fetch(
       `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`,
       {
         method: "PATCH",
@@ -159,6 +163,10 @@ export const updateProduct = (
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
 
     dispatch({
       type: UPDATE_PRODUCT,

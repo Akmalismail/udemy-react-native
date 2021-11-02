@@ -1,5 +1,7 @@
-import React, { useCallback, useEffect, useReducer } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import {
+    ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, View
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -8,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../App';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Input from '../../components/ui/Input';
+import Colors from '../../constants/Colors';
 import Product from '../../models/product';
 import * as productActions from '../../store/actions/products';
 
@@ -61,6 +64,9 @@ const formReducer = (
 };
 
 const EditProductScreen: NavigationStackScreenComponent = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<any>();
+
   const dispatch = useDispatch();
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector<RootState, Product | undefined>((state) =>
@@ -83,7 +89,13 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
     formIsValid: editedProduct ? true : false,
   });
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
+
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert("Wrong input!", "Please check the errors in the form.", [
         { text: "Okay" },
@@ -91,26 +103,35 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
       return;
     }
 
-    if (editedProduct) {
-      dispatch(
-        productActions.updateProduct(
-          prodId,
-          formState.inputValues.title,
-          formState.inputValues.imageUrl,
-          formState.inputValues.description
-        )
-      );
-    } else {
-      dispatch(
-        productActions.createProduct(
-          formState.inputValues.title,
-          formState.inputValues.imageUrl,
-          +formState.inputValues.price,
-          formState.inputValues.description
-        )
-      );
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      if (editedProduct) {
+        await dispatch(
+          productActions.updateProduct(
+            prodId,
+            formState.inputValues.title,
+            formState.inputValues.imageUrl,
+            formState.inputValues.description
+          ) as unknown as Promise<typeof productActions.updateProduct>
+        );
+      } else {
+        await dispatch(
+          productActions.createProduct(
+            formState.inputValues.title,
+            formState.inputValues.imageUrl,
+            +formState.inputValues.price,
+            formState.inputValues.description
+          ) as unknown as Promise<typeof productActions.createProduct>
+        );
+      }
+      props.navigation.goBack();
+    } catch (error) {
+      setError((error as { message: string }).message);
     }
-    props.navigation.goBack();
+
+    setIsLoading(false);
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
@@ -132,6 +153,14 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
     },
     [dispatchFormState]
   );
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -223,5 +252,10 @@ export default EditProductScreen;
 const styles = StyleSheet.create({
   form: {
     margin: 20,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
