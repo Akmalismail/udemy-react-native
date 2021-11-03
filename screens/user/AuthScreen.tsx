@@ -58,7 +58,7 @@ const formReducer = (
   return state;
 };
 
-const AuthScreen: NavigationStackScreenComponent = () => {
+const AuthScreen: NavigationStackScreenComponent = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>();
   const [isSignUp, setisSignUp] = useState(false);
@@ -113,10 +113,11 @@ const AuthScreen: NavigationStackScreenComponent = () => {
     setIsLoading(true);
     try {
       await dispatch(action as unknown as Promise<typeof action>);
+      props.navigation.navigate("Shop");
     } catch (error) {
       setError((error as { message: string }).message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -156,7 +157,7 @@ const AuthScreen: NavigationStackScreenComponent = () => {
                 keyboardType="default"
                 secureTextEntry
                 required
-                minLength={5}
+                minLength={6}
                 autoCapitalize="none"
                 errorText="Please enter a valid password."
                 onInputChange={inputChangeHandler as any}

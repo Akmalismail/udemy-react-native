@@ -1,3 +1,4 @@
+import { RootState } from '../../App';
 import Order from '../../models/order';
 import { TransformedCartItems } from '../../screens/shop/CartScreen';
 
@@ -69,10 +70,14 @@ export const addOrder = (
   cartItems: TransformedCartItems[],
   totalAmount: number
 ) => {
-  return async (dispatch: (action: AddOrderAction) => void) => {
+  return async (
+    dispatch: (action: AddOrderAction) => void,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
     const date = new Date();
     const response = await fetch(
-      "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json",
+      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json?auth=${token}`,
       {
         method: "POST",
         headers: {

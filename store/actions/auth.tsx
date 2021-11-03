@@ -3,9 +3,13 @@ export const LOGIN = "LOGIN";
 
 export type SignUpAction = {
   type: typeof SIGN_UP;
+  token: string;
+  userId: string;
 };
 export type LoginAction = {
   type: typeof LOGIN;
+  token: string;
+  userId: string;
 };
 
 export const signUp = (email: string, password: string) => {
@@ -28,6 +32,7 @@ export const signUp = (email: string, password: string) => {
 
       if (!response.ok) {
         const errorJson = await response.json();
+        console.log("signUp", errorJson);
         const errorId = errorJson.error.message;
         let message = "Something went wrong!";
 
@@ -39,10 +44,11 @@ export const signUp = (email: string, password: string) => {
       }
 
       const responseData = await response.json();
-      console.log("Response", responseData);
 
       dispatch({
         type: SIGN_UP,
+        token: responseData.idToken,
+        userId: responseData.localId,
       });
     } catch (error) {
       throw error;
@@ -69,6 +75,7 @@ export const login = (email: string, password: string) => {
 
       if (!response.ok) {
         const errorJson = await response.json();
+        console.log("signUp", errorJson);
         const errorId = errorJson.error.message;
         let message = "Something went wrong!";
 
@@ -82,10 +89,11 @@ export const login = (email: string, password: string) => {
       }
 
       const responseData = await response.json();
-      console.log("Response", responseData);
 
       dispatch({
         type: LOGIN,
+        token: responseData.idToken,
+        userId: responseData.localId,
       });
     } catch (error) {
       throw error;

@@ -1,3 +1,4 @@
+import { RootState } from '../../App';
 import Product from '../../models/product';
 
 // identifier
@@ -45,7 +46,12 @@ export const fetchProduct = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Something went wrong");
+        const errorJson = await response.json();
+        console.log("fetchProduct", errorJson);
+        const errorId = errorJson.error.message;
+        let message = "Something went wrong!";
+
+        throw new Error(message);
       }
 
       const responseData: {
@@ -84,16 +90,25 @@ export const fetchProduct = () => {
 };
 
 export const deleteProduct = (productId: string) => {
-  return async (dispatch: (action: DeleteProductAction) => void) => {
+  return async (
+    dispatch: (action: DeleteProductAction) => void,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`,
+      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth=${token}`,
       {
         method: "DELETE",
       }
     );
 
     if (!response.ok) {
-      throw new Error("Something went wrong!");
+      const errorJson = await response.json();
+      console.log("deleteProduct", errorJson);
+      const errorId = errorJson.error.message;
+      let message = "Something went wrong!";
+
+      throw new Error(message);
     }
 
     dispatch({
@@ -109,10 +124,13 @@ export const createProduct = (
   price: number,
   description: string
 ) => {
-  return async (dispatch: (action: CreateProductAction) => void) => {
-    // any async code you want!
+  return async (
+    dispatch: (action: CreateProductAction) => void,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
+      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`,
       {
         method: "POST",
         headers: {
@@ -148,9 +166,14 @@ export const updateProduct = (
   imageUrl: string,
   description: string
 ) => {
-  return async (dispatch: (action: UpdateProductAction) => void) => {
+  return async (
+    dispatch: (action: UpdateProductAction) => void,
+    getState: () => RootState
+  ) => {
+    const token = getState().auth.token;
+    console.log(token);
     const response = await fetch(
-      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`,
+      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         headers: {
@@ -165,7 +188,12 @@ export const updateProduct = (
     );
 
     if (!response.ok) {
-      throw new Error("Something went wrong!");
+      const errorJson = await response.json();
+      console.log("updateProduct", errorJson);
+      const errorId = errorJson.error.message;
+      let message = "Something went wrong!";
+
+      throw new Error(message);
     }
 
     dispatch({
