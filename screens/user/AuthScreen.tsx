@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback, useReducer, useState } from 'react';
 import {
     Button, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableWithoutFeedback, View
 } from 'react-native';
@@ -58,6 +58,7 @@ const formReducer = (
 };
 
 const AuthScreen: NavigationStackScreenComponent = () => {
+  const [isSignUp, setisSignUp] = useState(false);
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -88,13 +89,22 @@ const AuthScreen: NavigationStackScreenComponent = () => {
     [dispatchFormState]
   );
 
-  const signUpHandler = () => {
-    dispatch(
-      authActions.signUp(
-        formState.inputValues.email,
-        formState.inputValues.password
-      )
-    );
+  const authHandler = () => {
+    if (isSignUp) {
+      dispatch(
+        authActions.signUp(
+          formState.inputValues.email,
+          formState.inputValues.password
+        )
+      );
+    } else {
+      dispatch(
+        authActions.login(
+          formState.inputValues.email,
+          formState.inputValues.password
+        )
+      );
+    }
   };
 
   return (
@@ -136,16 +146,18 @@ const AuthScreen: NavigationStackScreenComponent = () => {
               />
               <View style={styles.buttonContainer}>
                 <Button
-                  title="Login"
+                  title={isSignUp ? "Sign Up" : "Login"}
                   color={Colors.primary}
-                  onPress={signUpHandler}
+                  onPress={authHandler}
                 />
               </View>
               <View style={styles.buttonContainer}>
                 <Button
-                  title="Switch to Sign Up"
+                  title={`Switch to ${isSignUp ? "Login" : "Sign Up"}`}
                   color={Colors.accent}
-                  onPress={() => {}}
+                  onPress={() => {
+                    setisSignUp((prevState) => !prevState);
+                  }}
                 />
               </View>
             </ScrollView>
