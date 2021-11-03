@@ -151,7 +151,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
         input: inputIdentifier,
       });
     },
-    [dispatchFormState]
+    [dispatchFormState, formState]
   );
 
   if (isLoading) {

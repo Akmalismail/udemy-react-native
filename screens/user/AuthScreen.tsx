@@ -1,7 +1,8 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
-    Button, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, TouchableWithoutFeedback, View
+    ActivityIndicator, Alert, Button, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet,
+    TouchableWithoutFeedback, View
 } from 'react-native';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch } from 'react-redux';
@@ -58,6 +59,8 @@ const formReducer = (
 };
 
 const AuthScreen: NavigationStackScreenComponent = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>();
   const [isSignUp, setisSignUp] = useState(false);
   const dispatch = useDispatch();
 
@@ -89,23 +92,38 @@ const AuthScreen: NavigationStackScreenComponent = () => {
     [dispatchFormState]
   );
 
-  const authHandler = () => {
+  const authHandler = async () => {
+    if (!formState.formIsValid) {
+      return;
+    }
+
+    let action;
     if (isSignUp) {
-      dispatch(
-        authActions.signUp(
-          formState.inputValues.email,
-          formState.inputValues.password
-        )
+      action = authActions.signUp(
+        formState.inputValues.email,
+        formState.inputValues.password
       );
     } else {
-      dispatch(
-        authActions.login(
-          formState.inputValues.email,
-          formState.inputValues.password
-        )
+      action = authActions.login(
+        formState.inputValues.email,
+        formState.inputValues.password
       );
     }
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action as unknown as Promise<typeof action>);
+    } catch (error) {
+      setError((error as { message: string }).message);
+    }
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured!", error, [{ text: "Okay" }]);
+    }
+  }, [error]);
 
   return (
     <KeyboardAvoidingView
@@ -145,11 +163,15 @@ const AuthScreen: NavigationStackScreenComponent = () => {
                 initialValue=""
               />
               <View style={styles.buttonContainer}>
-                <Button
-                  title={isSignUp ? "Sign Up" : "Login"}
-                  color={Colors.primary}
-                  onPress={authHandler}
-                />
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                  <Button
+                    title={isSignUp ? "Sign Up" : "Login"}
+                    color={Colors.primary}
+                    onPress={authHandler}
+                  />
+                )}
               </View>
               <View style={styles.buttonContainer}>
                 <Button
