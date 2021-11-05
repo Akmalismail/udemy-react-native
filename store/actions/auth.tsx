@@ -1,17 +1,10 @@
+// sign up
 export const SIGN_UP = "SIGN_UP";
-export const LOGIN = "LOGIN";
-
 export type SignUpAction = {
   type: typeof SIGN_UP;
   token: string;
   userId: string;
 };
-export type LoginAction = {
-  type: typeof LOGIN;
-  token: string;
-  userId: string;
-};
-
 export const signUp = (email: string, password: string) => {
   return async (dispatch: (action: SignUpAction) => void) => {
     try {
@@ -54,6 +47,14 @@ export const signUp = (email: string, password: string) => {
       throw error;
     }
   };
+};
+
+// login
+export const LOGIN = "LOGIN";
+export type LoginAction = {
+  type: typeof LOGIN;
+  token: string;
+  userId: string;
 };
 export const login = (email: string, password: string) => {
   return async (dispatch: (action: LoginAction) => void) => {

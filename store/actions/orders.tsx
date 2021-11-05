@@ -2,32 +2,21 @@ import { RootState } from '../../App';
 import Order from '../../models/order';
 import { TransformedCartItems } from '../../screens/shop/CartScreen';
 
-// identifier
-export const ADD_ORDER = "ADD_ORDER";
+// set order
 export const SET_ORDERS = "SET_ORDERS";
-
-// action types
-export type AddOrderAction = {
-  type: typeof ADD_ORDER;
-  orderData: {
-    id: string;
-    items: TransformedCartItems[];
-    amount: number;
-    date: Date;
-  };
-};
 export type FetchOrdersAction = {
   type: typeof SET_ORDERS;
   orders: Order[];
 };
-
-// action
 export const fetchOrders = () => {
-  return async (dispatch: (action: FetchOrdersAction) => void) => {
-    // any async code you want!
+  return async (
+    dispatch: (action: FetchOrdersAction) => void,
+    getState: () => RootState
+  ) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
-        "https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json"
+        `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json`
       );
 
       if (!response.ok) {
@@ -66,6 +55,17 @@ export const fetchOrders = () => {
   };
 };
 
+// add order
+export const ADD_ORDER = "ADD_ORDER";
+export type AddOrderAction = {
+  type: typeof ADD_ORDER;
+  orderData: {
+    id: string;
+    items: TransformedCartItems[];
+    amount: number;
+    date: Date;
+  };
+};
 export const addOrder = (
   cartItems: TransformedCartItems[],
   totalAmount: number
@@ -75,9 +75,11 @@ export const addOrder = (
     getState: () => RootState
   ) => {
     const token = getState().auth.token;
+    const userId = getState().auth.userId;
+
     const date = new Date();
     const response = await fetch(
-      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json?auth=${token}`,
+      `https://rn-complete-guide-42d4f-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json?auth=${token}`,
       {
         method: "POST",
         headers: {
