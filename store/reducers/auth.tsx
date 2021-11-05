@@ -1,10 +1,10 @@
-import { LOGIN, LoginAction, SIGN_UP, SignUpAction } from '../actions/auth';
+import { AUTHENTICATE, AuthenticateAction } from '../actions/auth';
 
 type AuthState = {
   token: string | null;
   userId: string | null;
 };
-
+type AuthActions = AuthenticateAction;
 const initialState: AuthState = {
   token: null,
   userId: null,
@@ -12,15 +12,10 @@ const initialState: AuthState = {
 
 export default (
   state = initialState,
-  action: LoginAction | SignUpAction
+  action: AuthenticateAction
 ): AuthState => {
   switch (action.type) {
-    case LOGIN:
-      return {
-        token: action.token,
-        userId: action.userId,
-      };
-    case SIGN_UP:
+    case AUTHENTICATE:
       return {
         token: action.token,
         userId: action.userId,
