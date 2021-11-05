@@ -104,21 +104,6 @@ export const login = (email: string, password: string) => {
   };
 };
 
-const saveDataToStorage = (
-  token: string,
-  userId: string,
-  expirationDate: Date
-) => {
-  AsyncStorage.setItem(
-    "userData",
-    JSON.stringify({
-      token: token,
-      userId: userId,
-      expiryDate: expirationDate.toISOString(),
-    })
-  );
-};
-
 export const AUTHENTICATE = "AUTHENTICATE";
 export type AuthenticateAction = {
   type: typeof AUTHENTICATE;
@@ -134,4 +119,29 @@ export const authenticate = (
     userId: userId,
     token: token,
   };
+};
+
+export const LOGOUT = "LOGOUT";
+export type LogoutAction = {
+  type: typeof LOGOUT;
+};
+export const logout = (): LogoutAction => {
+  return {
+    type: LOGOUT,
+  };
+};
+
+const saveDataToStorage = (
+  token: string,
+  userId: string,
+  expirationDate: Date
+) => {
+  AsyncStorage.setItem(
+    "userData",
+    JSON.stringify({
+      token: token,
+      userId: userId,
+      expiryDate: expirationDate.toISOString(),
+    })
+  );
 };
