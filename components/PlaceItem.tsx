@@ -2,10 +2,10 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '../constants/Colors';
+import Place from '../models/place';
 
 type PlaceItemProps = {
-  image: string;
-  title: string;
+  place: Place;
   address: string;
   onSelect: () => void;
 };
@@ -13,9 +13,9 @@ type PlaceItemProps = {
 const PlaceItem: React.FC<PlaceItemProps> = (props) => {
   return (
     <TouchableOpacity onPress={props.onSelect} style={styles.placeItem}>
-      <Image style={styles.image} source={{ uri: props.image }} />
+      <Image style={styles.image} source={{ uri: props.place.imageUri }} />
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{props.title}</Text>
+        <Text style={styles.title}>{props.place.title}</Text>
         <Text style={styles.address}>{props.address}</Text>
       </View>
     </TouchableOpacity>

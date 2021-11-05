@@ -10,14 +10,19 @@ import { useAppDispatch } from '../store/store';
 
 const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useAppDispatch();
+  const [selectedImage, setSelectedImage] = useState<string>();
 
   const [titleValue, setTitleValue] = useState("");
   const titleChangeHandler = (text: string) => {
     setTitleValue(text);
   };
 
+  const imageTakenHandler = (imagePath: string) => {
+    setSelectedImage(imagePath);
+  };
+
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue));
+    dispatch(placesActions.addPlace(titleValue, selectedImage as string));
     props.navigation.goBack();
   };
 
@@ -30,7 +35,7 @@ const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
           onChangeText={titleChangeHandler}
           value={titleValue}
         />
-        <ImagePicker />
+        <ImagePicker onImageTaken={imageTakenHandler} />
         <Button
           title="Save Place"
           color={Colors.primary}

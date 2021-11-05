@@ -16,10 +16,7 @@ const PlacesListScreen: NavigationStackScreenComponent = (props) => {
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (
         <PlaceItem
-          image={
-            "https://gotanynudes.com/wp-content/uploads/2021/03/Alinity-Nude-Onlyfans-Leaked-2.jpg"
-          }
-          title={itemData.item.title}
+          place={itemData.item}
           address={""}
           onSelect={() => {
             props.navigation.navigate("PlaceDetail", { place: itemData.item });

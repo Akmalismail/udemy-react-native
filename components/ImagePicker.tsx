@@ -4,7 +4,11 @@ import { Alert, Button, Image, StyleSheet, Text, View } from 'react-native';
 
 import Colors from '../constants/Colors';
 
-const ImgPicker = () => {
+type ImgPickerProps = {
+  onImageTaken: (imagePath: string) => void;
+};
+
+const ImgPicker: React.FC<ImgPickerProps> = (props) => {
   const [pickedImage, setPickedImage] = useState<string>();
 
   const verifyPermissions = async () => {
@@ -33,9 +37,9 @@ const ImgPicker = () => {
       exif: true,
     });
 
-    console.log(image);
     if (!image.cancelled) {
       setPickedImage(image.uri);
+      props.onImageTaken(image.uri);
     }
   };
 
@@ -62,6 +66,7 @@ export default ImgPicker;
 const styles = StyleSheet.create({
   imagePicker: {
     alignItems: "center",
+    marginBottom: 15,
   },
   imagePreview: {
     width: "100%",

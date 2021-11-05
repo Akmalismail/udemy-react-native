@@ -15,7 +15,8 @@ const placesReducer = createReducer(initialState, (builder) => {
   builder.addCase(addPlace, (state, action) => {
     const newPlace = new Place(
       new Date().toString(),
-      action.payload.placeData.title
+      action.payload.placeData.title,
+      action.payload.placeData.image
     );
 
     return {
