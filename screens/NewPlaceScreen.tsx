@@ -4,14 +4,21 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import Colors from '../constants/Colors';
+import * as placesActions from '../store/places-action';
+import { useAppDispatch } from '../store/store';
 
-const NewPlaceScreen: NavigationStackScreenComponent = () => {
+const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
+  const dispatch = useAppDispatch();
+
   const [titleValue, setTitleValue] = useState("");
   const titleChangeHandler = (text: string) => {
     setTitleValue(text);
   };
 
-  const savePlaceHandler = () => {};
+  const savePlaceHandler = () => {
+    dispatch(placesActions.addPlace(titleValue));
+    props.navigation.goBack();
+  };
 
   return (
     <ScrollView>
