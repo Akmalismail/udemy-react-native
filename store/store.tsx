@@ -1,8 +1,14 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { combineReducers } from 'redux';
 
 import { configureStore } from '@reduxjs/toolkit';
 
-import { rootReducer, RootState } from '../App';
+import placesReducer from './places-reducer';
+
+export const rootReducer = combineReducers({
+  places: placesReducer,
+});
+export type RootState = ReturnType<typeof rootReducer>;
 
 const store = configureStore({
   reducer: rootReducer,

@@ -1,15 +1,30 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
 import CustomHeaderButton from '../components/CustomHeaderButton';
+import PlaceItem from '../components/PlaceItem';
+import { useAppSelector } from '../store/store';
 
-const PlacesListScreen: NavigationStackScreenComponent = () => {
+const PlacesListScreen: NavigationStackScreenComponent = (props) => {
+  const places = useAppSelector((state) => state.places.places);
+
   return (
-    <View>
-      <Text>PlacesListScreen</Text>
-    </View>
+    <FlatList
+      data={places}
+      keyExtractor={(item) => item.id}
+      renderItem={(itemData) => (
+        <PlaceItem
+          image={""}
+          title={itemData.item.title}
+          address={""}
+          onSelect={() => {
+            props.navigation.navigate("PlaceDetail", { place: itemData.item });
+          }}
+        />
+      )}
+    />
   );
 };
 
