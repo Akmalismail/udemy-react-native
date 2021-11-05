@@ -2,7 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // sign up
 export const signUp = (email: string, password: string) => {
-  return async (dispatch: (action: AuthenticateAction) => void) => {
+  return async (
+    dispatch: (action: ReturnType<typeof authenticate>) => void
+  ) => {
     try {
       const response = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyClZQBT6Eek3xcDN8IG8niywrZWVQnjDg0",
@@ -34,7 +36,13 @@ export const signUp = (email: string, password: string) => {
 
       const responseData = await response.json();
 
-      dispatch(authenticate(responseData.localId, responseData.idToken));
+      dispatch(
+        authenticate(
+          responseData.localId,
+          responseData.idToken,
+          parseInt(responseData.expiresIn) * 1000
+        )
+      );
 
       const expirationDate = new Date(
         new Date().getTime() + parseInt(responseData.expiresIn) * 1000
@@ -53,7 +61,9 @@ export const signUp = (email: string, password: string) => {
 
 // login
 export const login = (email: string, password: string) => {
-  return async (dispatch: (action: AuthenticateAction) => void) => {
+  return async (
+    dispatch: (action: ReturnType<typeof authenticate>) => void
+  ) => {
     try {
       const response = await fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyClZQBT6Eek3xcDN8IG8niywrZWVQnjDg0",
@@ -87,7 +97,13 @@ export const login = (email: string, password: string) => {
 
       const responseData = await response.json();
 
-      dispatch(authenticate(responseData.localId, responseData.idToken));
+      dispatch(
+        authenticate(
+          responseData.localId,
+          responseData.idToken,
+          parseInt(responseData.expiresIn) * 1000
+        )
+      );
 
       const expirationDate = new Date(
         new Date().getTime() + parseInt(responseData.expiresIn) * 1000
@@ -112,12 +128,20 @@ export type AuthenticateAction = {
 };
 export const authenticate = (
   userId: string,
-  token: string
-): AuthenticateAction => {
-  return {
-    type: AUTHENTICATE,
-    userId: userId,
-    token: token,
+  token: string,
+  expiryTime: number
+) => {
+  return async (
+    dispatch: (
+      action: AuthenticateAction | ReturnType<typeof setLogoutTimer>
+    ) => void
+  ) => {
+    dispatch(setLogoutTimer(expiryTime));
+    dispatch({
+      type: AUTHENTICATE,
+      userId: userId,
+      token: token,
+    });
   };
 };
 
@@ -126,9 +150,25 @@ export type LogoutAction = {
   type: typeof LOGOUT;
 };
 export const logout = (): LogoutAction => {
+  clearLogoutTimer();
+  AsyncStorage.removeItem("userData");
   return {
     type: LOGOUT,
   };
+};
+
+let timer: NodeJS.Timeout;
+const setLogoutTimer = (expirationTime: number) => {
+  return async (dispatch: (action: LogoutAction) => void) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
 };
 
 const saveDataToStorage = (

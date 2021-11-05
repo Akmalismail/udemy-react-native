@@ -4,16 +4,13 @@ type AuthState = {
   token: string | null;
   userId: string | null;
 };
-type AuthActions = AuthenticateAction;
+type AuthActions = AuthenticateAction | LogoutAction;
 const initialState: AuthState = {
   token: null,
   userId: null,
 };
 
-export default (
-  state = initialState,
-  action: AuthenticateAction | LogoutAction
-): AuthState => {
+export default (state = initialState, action: AuthActions): AuthState => {
   switch (action.type) {
     case AUTHENTICATE:
       return {
