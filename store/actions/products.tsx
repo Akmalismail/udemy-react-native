@@ -89,6 +89,7 @@ export const fetchProduct = () => {
 
       const responseData: {
         [key: string]: {
+          ownerId: string;
           description: string;
           imageUrl: string;
           price: number;
@@ -102,7 +103,7 @@ export const fetchProduct = () => {
         loadedProducts.push(
           new Product(
             key,
-            userId as string,
+            responseData[key].ownerId,
             responseData[key].title,
             responseData[key].imageUrl,
             responseData[key].description,
