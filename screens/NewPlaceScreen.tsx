@@ -3,6 +3,7 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 
+import ImagePicker from '../components/ImagePicker';
 import Colors from '../constants/Colors';
 import * as placesActions from '../store/places-action';
 import { useAppDispatch } from '../store/store';
@@ -29,6 +30,7 @@ const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
           onChangeText={titleChangeHandler}
           value={titleValue}
         />
+        <ImagePicker />
         <Button
           title="Save Place"
           color={Colors.primary}
