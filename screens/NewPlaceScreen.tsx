@@ -22,7 +22,12 @@ const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
   };
 
   const savePlaceHandler = () => {
-    dispatch(placesActions.addPlace(titleValue, selectedImage as string));
+    dispatch(
+      placesActions.addPlace({
+        title: titleValue,
+        image: selectedImage as string,
+      })
+    );
     props.navigation.goBack();
   };
 

@@ -12,7 +12,7 @@ const initialState: PlacesState = {
 };
 
 const placesReducer = createReducer(initialState, (builder) => {
-  builder.addCase(addPlace, (state, action) => {
+  builder.addCase(addPlace.fulfilled, (state, action) => {
     const newPlace = new Place(
       new Date().toString(),
       action.payload.placeData.title,
