@@ -1,7 +1,7 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from "@reduxjs/toolkit";
 
-import Place from '../models/place';
-import { addPlace } from './places-action';
+import Place from "../models/place";
+import { addPlace } from "./places-action";
 
 interface PlacesState {
   places: Place[];
@@ -14,7 +14,7 @@ const initialState: PlacesState = {
 const placesReducer = createReducer(initialState, (builder) => {
   builder.addCase(addPlace.fulfilled, (state, action) => {
     const newPlace = new Place(
-      new Date().toString(),
+      (action.payload.placeData.id as number).toString(),
       action.payload.placeData.title,
       action.payload.placeData.image
     );
