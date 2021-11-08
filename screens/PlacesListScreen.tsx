@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import * as placesActions from "../store/places-action";
+
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { NavigationStackScreenComponent } from "react-navigation-stack";
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 import CustomHeaderButton from "../components/CustomHeaderButton";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 import PlaceItem from "../components/PlaceItem";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import * as placesActions from "../store/places-action";
 
 const PlacesListScreen: NavigationStackScreenComponent = (props) => {
   const places = useAppSelector((state) => state.places.places);
@@ -23,9 +24,11 @@ const PlacesListScreen: NavigationStackScreenComponent = (props) => {
       renderItem={(itemData) => (
         <PlaceItem
           place={itemData.item}
-          address={""}
           onSelect={() => {
-            props.navigation.navigate("PlaceDetail", { place: itemData.item });
+            props.navigation.navigate("PlaceDetail", {
+              placeId: itemData.item.id,
+              placeTitle: itemData.item.title,
+            });
           }}
         />
       )}

@@ -1,12 +1,11 @@
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import Colors from '../constants/Colors';
-import Place from '../models/place';
+import Colors from "../constants/Colors";
+import Place from "../models/place";
+import React from "react";
 
 type PlaceItemProps = {
   place: Place;
-  address: string;
   onSelect: () => void;
 };
 
@@ -16,7 +15,7 @@ const PlaceItem: React.FC<PlaceItemProps> = (props) => {
       <Image style={styles.image} source={{ uri: props.place.imageUri }} />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{props.place.title}</Text>
-        <Text style={styles.address}>{props.address}</Text>
+        <Text style={styles.address}>{props.place.address}</Text>
       </View>
     </TouchableOpacity>
   );
