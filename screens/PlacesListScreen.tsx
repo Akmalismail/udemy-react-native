@@ -1,14 +1,20 @@
-import React from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
+import React, { useEffect } from "react";
+import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 
-import CustomHeaderButton from '../components/CustomHeaderButton';
-import PlaceItem from '../components/PlaceItem';
-import { useAppSelector } from '../store/store';
+import CustomHeaderButton from "../components/CustomHeaderButton";
+import PlaceItem from "../components/PlaceItem";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import * as placesActions from "../store/places-action";
 
 const PlacesListScreen: NavigationStackScreenComponent = (props) => {
   const places = useAppSelector((state) => state.places.places);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(placesActions.loadPlaces());
+  }, [dispatch]);
 
   return (
     <FlatList

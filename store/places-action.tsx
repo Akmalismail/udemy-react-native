@@ -1,10 +1,11 @@
 import * as FileSystem from "expo-file-system";
 
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { insertPlace } from "../helpers/db";
+import { fetchPlaces, insertPlace } from "../helpers/db";
 
 export const ADD_PLACE = "ADD_PLACE";
+export const SET_PLACES = "SET_PLACES";
 
 export const addPlace = createAsyncThunk(
   ADD_PLACE,
@@ -20,7 +21,7 @@ export const addPlace = createAsyncThunk(
 
       const dbResult = await insertPlace(
         place.title,
-        place.image,
+        newPath,
         "Dummy Address",
         15.6,
         12.3
@@ -38,3 +39,21 @@ export const addPlace = createAsyncThunk(
     }
   }
 );
+
+export const loadPlaces = createAsyncThunk(SET_PLACES, async (_) => {
+  try {
+    const dbResult = await fetchPlaces();
+    return {
+      places: dbResult.rows._array as Array<{
+        address: string;
+        id: number;
+        imageUri: string;
+        lat: number;
+        lng: number;
+        title: string;
+      }>,
+    };
+  } catch (error) {
+    throw error;
+  }
+});
