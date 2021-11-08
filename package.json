@@ -33,7 +33,8 @@
     "redux-thunk": "^2.4.0",
     "expo-file-system": "~13.0.3",
     "expo-sqlite": "~10.0.3",
-    "expo-location": "~13.0.4"
+    "expo-location": "~13.0.4",
+    "react-native-maps": "0.28.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
