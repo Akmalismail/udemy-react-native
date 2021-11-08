@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Colors from "../constants/Colors";
 import MapPreview from "./MapPreview";
@@ -22,6 +22,17 @@ const LocationPicker: React.FC<LocationPickerProps> = (props) => {
   const [isFetching, setIsFetching] = useState(false);
   const [pickedLocation, setPickedLocation] =
     useState<{ lat: number; lng: number }>();
+
+  const mapPickedLocation = props.navigation.getParam("pickedLocation");
+
+  useEffect(() => {
+    if (mapPickedLocation) {
+      setPickedLocation({
+        lat: mapPickedLocation.latitude,
+        lng: mapPickedLocation.longitude,
+      });
+    }
+  }, [mapPickedLocation]);
 
   const verifyPermissions = async () => {
     const result = await Location.requestForegroundPermissionsAsync();
