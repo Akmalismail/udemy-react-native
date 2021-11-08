@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
+import * as placesActions from "../store/places-action";
 
-import ImagePicker from '../components/ImagePicker';
-import Colors from '../constants/Colors';
-import * as placesActions from '../store/places-action';
-import { useAppDispatch } from '../store/store';
+import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
+
+import Colors from "../constants/Colors";
+import ImagePicker from "../components/ImagePicker";
+import LocationPicker from "../components/LocationPicker";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
+import { useAppDispatch } from "../store/store";
 
 const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
   const dispatch = useAppDispatch();
@@ -41,6 +43,7 @@ const NewPlaceScreen: NavigationStackScreenComponent = (props) => {
           value={titleValue}
         />
         <ImagePicker onImageTaken={imageTakenHandler} />
+        <LocationPicker />
         <Button
           title="Save Place"
           color={Colors.primary}
