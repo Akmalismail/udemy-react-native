@@ -16,6 +16,7 @@ import { StackNavigationProp } from "react-navigation-stack/lib/typescript/src/v
 
 type LocationPickerProps = {
   navigation: StackNavigationProp;
+  onLocationPicked: (location: { lat: number; lng: number }) => void;
 };
 
 const LocationPicker: React.FC<LocationPickerProps> = (props) => {
@@ -24,6 +25,7 @@ const LocationPicker: React.FC<LocationPickerProps> = (props) => {
     useState<{ lat: number; lng: number }>();
 
   const mapPickedLocation = props.navigation.getParam("pickedLocation");
+  const { onLocationPicked } = props;
 
   useEffect(() => {
     if (mapPickedLocation) {
@@ -31,8 +33,12 @@ const LocationPicker: React.FC<LocationPickerProps> = (props) => {
         lat: mapPickedLocation.latitude,
         lng: mapPickedLocation.longitude,
       });
+      onLocationPicked({
+        lat: mapPickedLocation.latitude,
+        lng: mapPickedLocation.longitude,
+      });
     }
-  }, [mapPickedLocation]);
+  }, [mapPickedLocation, onLocationPicked]);
 
   const verifyPermissions = async () => {
     const result = await Location.requestForegroundPermissionsAsync();
@@ -55,9 +61,14 @@ const LocationPicker: React.FC<LocationPickerProps> = (props) => {
     }
 
     try {
+      setPickedLocation(undefined);
       setIsFetching(true);
       const location = await Location.getCurrentPositionAsync();
       setPickedLocation({
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      });
+      onLocationPicked({
         lat: location.coords.latitude,
         lng: location.coords.longitude,
       });
