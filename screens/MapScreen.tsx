@@ -6,17 +6,35 @@ import Colors from "../constants/Colors";
 import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 const MapScreen: NavigationStackScreenComponent = (props) => {
-  const [selectedLocation, setSelectedLocation] =
-    useState<{ latitude: number; longitude: number }>();
+  const readonly = props.navigation.getParam("readonly") as boolean | undefined;
+  const initialLocation = props.navigation.getParam("initialLocation") as
+    | {
+        lat: number;
+        lng: number;
+      }
+    | undefined;
+
+  const [selectedLocation, setSelectedLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(
+    initialLocation
+      ? { latitude: initialLocation.lat, longitude: initialLocation.lng }
+      : null
+  );
 
   const mapRegion = {
-    latitude: 37.78,
-    longitude: -122.43,
+    latitude: initialLocation ? initialLocation.lat : 37.78,
+    longitude: initialLocation ? initialLocation.lng : -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0431,
   };
 
   const selectLocationHandler = (event: MapEvent) => {
+    if (readonly) {
+      return;
+    }
+
     setSelectedLocation(event.nativeEvent.coordinate);
   };
 
@@ -53,6 +71,11 @@ const MapScreen: NavigationStackScreenComponent = (props) => {
 
 MapScreen.navigationOptions = (navigationData) => {
   const saveFn = navigationData.navigation.getParam("saveLocation");
+  const readonly = navigationData.navigation.getParam("readonly");
+
+  if (readonly) {
+    return {};
+  }
 
   return {
     headerRight: () => (
