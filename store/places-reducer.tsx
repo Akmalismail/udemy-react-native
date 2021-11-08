@@ -1,7 +1,7 @@
-import { createReducer } from "@reduxjs/toolkit";
+import { addPlace, loadPlaces } from "./places-action";
 
 import Place from "../models/place";
-import { addPlace, loadPlaces } from "./places-action";
+import { createReducer } from "@reduxjs/toolkit";
 
 interface PlacesState {
   places: Place[];
@@ -17,7 +17,10 @@ const placesReducer = createReducer(initialState, (builder) => {
       const newPlace = new Place(
         (action.payload.placeData.id as number).toString(),
         action.payload.placeData.title,
-        action.payload.placeData.image
+        action.payload.placeData.image,
+        action.payload.placeData.address,
+        action.payload.placeData.coords.lat,
+        action.payload.placeData.coords.lng
       );
 
       return {
@@ -27,7 +30,15 @@ const placesReducer = createReducer(initialState, (builder) => {
     .addCase(loadPlaces.fulfilled, (state, action) => {
       return {
         places: action.payload.places.map(
-          (pl) => new Place(pl.id.toString(), pl.title, pl.imageUri)
+          (pl) =>
+            new Place(
+              pl.id.toString(),
+              pl.title,
+              pl.imageUri,
+              pl.address,
+              pl.lat,
+              pl.lng
+            )
         ),
       };
     });
