@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
     ActivityIndicator, Button, FlatList, Platform, StyleSheet, Text, View
 } from 'react-native';
+import { NavigationParams } from 'react-navigation';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
@@ -128,7 +129,7 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-ProductsOverviewScreen.navigationOptions = (navigationData) => {
+export const screenOptions = (navigationData: NavigationParams) => {
   return {
     headerTitle: "All Products",
     headerLeft: () => (
