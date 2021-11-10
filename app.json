@@ -15,9 +15,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "my.com.domain.unique",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "my.com.domain.unique",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/places-adaptive.png",
         "backgroundColor": "#FFFFFF"
@@ -26,7 +30,12 @@
         "ACCESS_FINE_LOCATION",
         "CAMERA",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyClZQBT6Eek3xcDN8IG8niywrZWVQnjDg0"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
