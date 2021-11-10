@@ -2,21 +2,29 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
     ActivityIndicator, Button, FlatList, Platform, StyleSheet, Text, View
 } from 'react-native';
-import { NavigationParams } from 'react-navigation';
-import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import {
+    StackNavigationOptions, StackNavigationProp, StackScreenProps
+} from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import { ProductsStackParamsList } from '../../navigation/ShopNavigator';
 import { addToCart } from '../../store/actions/cart';
 import * as productActions from '../../store/actions/products';
 
-const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
+type ProductsOverviewScreenProps = StackScreenProps<
+  ProductsStackParamsList,
+  "ProductsOverview"
+>;
+
+const ProductsOverviewScreen = (props: ProductsOverviewScreenProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<null>();
@@ -44,13 +52,8 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
 
   // refetch
   useEffect(() => {
-    const willFocusSub = props.navigation.addListener(
-      "willFocus",
-      loadProducts
-    );
-    return () => {
-      willFocusSub.remove();
-    };
+    const unsubscribe = props.navigation.addListener("focus", loadProducts);
+    return unsubscribe;
   }, [loadProducts]);
 
   useEffect(() => {
@@ -129,34 +132,34 @@ const ProductsOverviewScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-export const screenOptions = (navigationData: NavigationParams) => {
-  return {
-    headerTitle: "All Products",
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title="Menu"
-          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-          onPress={() => {
-            (
-              navigationData.navigation as unknown as NavigationDrawerProp
-            ).toggleDrawer();
-          }}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title="Cart"
-          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-          onPress={() => {
-            navigationData.navigation.navigate("Cart");
-          }}
-        />
-      </HeaderButtons>
-    ),
-  };
+export const screenOptions: StackNavigationOptions = {
+  headerTitle: "All Products",
+  headerLeft: () => (
+    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        title="Menu"
+        iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+        onPress={() => {
+          const navigation =
+            useNavigation<StackNavigationProp<ProductsStackParamsList>>();
+          navigation.dispatch(DrawerActions.toggleDrawer);
+        }}
+      />
+    </HeaderButtons>
+  ),
+  headerRight: () => (
+    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+      <Item
+        title="Cart"
+        iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+        onPress={() => {
+          const navigation =
+            useNavigation<StackNavigationProp<ProductsStackParamsList>>();
+          navigation.navigate("Cart");
+        }}
+      />
+    </HeaderButtons>
+  ),
 };
 
 export default ProductsOverviewScreen;

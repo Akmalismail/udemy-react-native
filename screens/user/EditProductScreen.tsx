@@ -7,11 +7,17 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { RouteProp } from '@react-navigation/native';
+import {
+    StackNavigationOptions, StackNavigationProp, StackScreenProps
+} from '@react-navigation/stack';
+
 import { RootState } from '../../App';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import { AdminStackParamsList } from '../../navigation/ShopNavigator';
 import * as productActions from '../../store/actions/products';
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
@@ -63,12 +69,20 @@ const formReducer = (
   return state;
 };
 
-const EditProductScreen: NavigationStackScreenComponent = (props) => {
+type EditProductScreenProps = StackScreenProps<
+  AdminStackParamsList,
+  "EditProduct"
+>;
+
+const EditProductScreen: React.FC<EditProductScreenProps> = ({
+  route,
+  navigation,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<any>();
 
   const dispatch = useDispatch();
-  const prodId = props.navigation.getParam("productId");
+  const prodId = route.params?.productId;
   const editedProduct = useSelector<RootState, Product | undefined>((state) =>
     state.products.userProducts.find((product) => product.id === prodId)
   );
@@ -110,7 +124,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
       if (editedProduct) {
         await dispatch(
           productActions.updateProduct(
-            prodId,
+            prodId as string,
             formState.inputValues.title,
             formState.inputValues.imageUrl,
             formState.inputValues.description
@@ -126,7 +140,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
           ) as unknown as Promise<typeof productActions.createProduct>
         );
       }
-      props.navigation.goBack();
+      navigation.goBack();
     } catch (error) {
       setError((error as { message: string }).message);
     }
@@ -135,7 +149,7 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
+    navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
   const inputChangeHandler = useCallback(
@@ -227,12 +241,13 @@ const EditProductScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-EditProductScreen.navigationOptions = (navigationData) => {
-  const submitFn = navigationData.navigation.getParam("submit");
+export const screenOptions: (props: {
+  route: RouteProp<AdminStackParamsList, "EditProduct">;
+  navigation: StackNavigationProp<AdminStackParamsList, "EditProduct">;
+}) => StackNavigationOptions = ({ route, navigation }) => {
+  const submitFn = route.params?.submit;
   return {
-    headerTitle: navigationData.navigation.getParam("productId")
-      ? "Edit Product"
-      : "Add Product",
+    headerTitle: route.params?.productId ? "Edit Product" : "Add Product",
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item

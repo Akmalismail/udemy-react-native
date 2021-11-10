@@ -1,16 +1,27 @@
 import React from 'react';
 import { Button, Image, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationOptions, StackScreenProps } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import { ProductsStackParamsList } from '../../navigation/ShopNavigator';
 import { addToCart } from '../../store/actions/cart';
 
-const ProductDetailScreen: NavigationStackScreenComponent = (props) => {
-  const productId = props.navigation.getParam("productId");
+type ProductsOverviewScreenProps = StackScreenProps<
+  ProductsStackParamsList,
+  "ProductDetail"
+>;
+
+const ProductDetailScreen: React.FC<ProductsOverviewScreenProps> = ({
+  route,
+  navigation,
+}) => {
+  const { productId } = route.params;
   const selectedProduct = useSelector<RootState, Product>(
     (state) =>
       state.products.availableProducts.find(
@@ -37,9 +48,11 @@ const ProductDetailScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-ProductDetailScreen.navigationOptions = (navigationData) => {
+export const screenOptions: (props: {
+  route: RouteProp<ProductsStackParamsList, "ProductDetail">;
+}) => StackNavigationOptions = ({ route }) => {
   return {
-    headerTitle: navigationData.navigation.getParam("productTitle"),
+    headerTitle: route.params.productTitle,
   };
 };
 

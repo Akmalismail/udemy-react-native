@@ -2,17 +2,27 @@ import React from 'react';
 import { Alert, Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
 import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { DrawerActions, RouteProp } from '@react-navigation/native';
+import {
+    StackNavigationOptions, StackNavigationProp, StackScreenProps
+} from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
+import { AdminStackParamsList } from '../../navigation/ShopNavigator';
 import * as productsActions from '../../store/actions/products';
 
-const UserProductsScreen: NavigationStackScreenComponent = (props) => {
+type UserProductsScreenProps = StackScreenProps<
+  AdminStackParamsList,
+  "UserProducts"
+>;
+
+const UserProductsScreen: React.FC<UserProductsScreenProps> = (props) => {
   const userProducts = useSelector<RootState, Product[]>(
     (state) => state.products.userProducts
   );
@@ -75,7 +85,10 @@ const UserProductsScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-UserProductsScreen.navigationOptions = (navigationData) => {
+export const screenOptions: (props: {
+  route: RouteProp<AdminStackParamsList, "UserProducts">;
+  navigation: StackNavigationProp<AdminStackParamsList, "UserProducts">;
+}) => StackNavigationOptions = ({ navigation }) => {
   return {
     headerTitle: "Your Products",
     headerLeft: () => (
@@ -84,9 +97,7 @@ UserProductsScreen.navigationOptions = (navigationData) => {
           title="Menu"
           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
           onPress={() => {
-            (
-              navigationData.navigation as unknown as NavigationDrawerProp
-            ).toggleDrawer();
+            navigation.dispatch(DrawerActions.toggleDrawer());
           }}
         />
       </HeaderButtons>
@@ -97,7 +108,7 @@ UserProductsScreen.navigationOptions = (navigationData) => {
           title="Add"
           iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
           onPress={() => {
-            navigationData.navigation.navigate("EditProduct");
+            navigation.navigate("EditProduct");
           }}
         />
       </HeaderButtons>
