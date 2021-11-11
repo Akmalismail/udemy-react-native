@@ -141,7 +141,19 @@ const EditProductScreen: React.FC<EditProductScreenProps> = ({
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
-    navigation.setParams({ submit: submitHandler });
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title="Save"
+            iconName={
+              Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
+            }
+            onPress={submitHandler}
+          />
+        </HeaderButtons>
+      ),
+    });
   }, [submitHandler]);
 
   const inputChangeHandler = useCallback(
@@ -237,20 +249,8 @@ export const screenOptions: (props: {
   route: RouteProp<AdminStackParamsList, "EditProduct">;
   navigation: StackNavigationProp<AdminStackParamsList, "EditProduct">;
 }) => StackNavigationOptions = ({ route, navigation }) => {
-  const submitFn = route.params?.submit;
   return {
     headerTitle: route.params?.productId ? "Edit Product" : "Add Product",
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-        <Item
-          title="Save"
-          iconName={
-            Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"
-          }
-          onPress={submitFn}
-        />
-      </HeaderButtons>
-    ),
   };
 };
 

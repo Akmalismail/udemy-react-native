@@ -24,7 +24,7 @@ export type AdminStackParamsList = {
 };
 export type ShopDrawerParamsList = {
   Products: undefined;
-  Orders: undefined;
+  OrdersDrawer: undefined;
   Admin: undefined;
 };
 export type AuthStackParamsList = {

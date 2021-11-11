@@ -137,10 +137,11 @@ export const ShopNavigator = () => {
         }}
       />
       <ShopDrawerNavigator.Screen
-        name="Orders"
+        name="OrdersDrawer"
         component={OrdersNavigator}
         options={{
           headerShown: false,
+          title: "Orders",
           drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
