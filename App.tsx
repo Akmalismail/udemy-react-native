@@ -1,7 +1,17 @@
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    };
+  },
+});
 
 export default function App() {
   useEffect(() => {
@@ -24,9 +34,10 @@ export default function App() {
       content: {
         title: "My first local notification",
         body: "This is the first local notification  we are sending!",
+        sound: true,
       },
       trigger: {
-        seconds: 10,
+        seconds: 2,
       },
     });
   };
