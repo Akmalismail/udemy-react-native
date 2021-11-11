@@ -1,21 +1,25 @@
 import * as Notifications from 'expo-notifications';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Button, StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  useEffect(() => {
+    Notifications.getPermissionsAsync()
+      .then((status) => {
+        if (!status.granted) {
+          return Notifications.requestPermissionsAsync();
+        }
+        return status;
+      })
+      .then((status) => {
+        if (status.granted) {
+          return;
+        }
+      });
+  }, []);
+
   const triggerNotificationHandler = async () => {
-    const permissionResult = await Notifications.requestPermissionsAsync();
-
-    if (!permissionResult.granted) {
-      Alert.alert(
-        "Permission required!",
-        "Please enable notification permissions",
-        [{ text: "Okay" }]
-      );
-      return;
-    }
-
     Notifications.scheduleNotificationAsync({
       content: {
         title: "My first local notification",
