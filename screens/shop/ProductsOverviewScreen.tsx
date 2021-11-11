@@ -5,7 +5,7 @@ import {
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { DrawerActions, RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
@@ -125,34 +125,35 @@ const ProductsOverviewScreen = (props: ProductsOverviewScreenProps) => {
   );
 };
 
-export const screenOptions: StackNavigationOptions = {
-  headerTitle: "All Products",
-  headerLeft: () => (
-    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-      <Item
-        title="Menu"
-        iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-        onPress={() => {
-          const navigation =
-            useNavigation<StackNavigationProp<ProductsStackParamsList>>();
-          navigation.dispatch(DrawerActions.toggleDrawer);
-        }}
-      />
-    </HeaderButtons>
-  ),
-  headerRight: () => (
-    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-      <Item
-        title="Cart"
-        iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
-        onPress={() => {
-          const navigation =
-            useNavigation<StackNavigationProp<ProductsStackParamsList>>();
-          navigation.navigate("Cart");
-        }}
-      />
-    </HeaderButtons>
-  ),
+export const screenOptions: (props: {
+  route: RouteProp<ProductsStackParamsList, "ProductsOverview">;
+  navigation: StackNavigationProp<ProductsStackParamsList, "ProductsOverview">;
+}) => StackNavigationOptions = ({ navigation }) => {
+  return {
+    headerTitle: "All Products",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navigation.dispatch(DrawerActions.toggleDrawer);
+          }}
+        />
+      </HeaderButtons>
+    ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Cart"
+          iconName={Platform.OS === "android" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navigation.navigate("Cart");
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 export default ProductsOverviewScreen;

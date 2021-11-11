@@ -28,7 +28,10 @@ export default (state = initialState, action: AuthActions): AuthState => {
         didTryAutoLogin: true,
       };
     case LOGOUT:
-      return initialState;
+      return {
+        ...initialState,
+        didTryAutoLogin: true,
+      };
     default:
       return state;
   }

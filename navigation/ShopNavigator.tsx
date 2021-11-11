@@ -111,7 +111,7 @@ export const ShopNavigator = () => {
                 color={Colors.primary}
                 onPress={() => {
                   dispatch(authActions.logout());
-                  props.navigation.navigate("Auth");
+                  // props.navigation.navigate("Auth");
                 }}
               />
             </SafeAreaView>
@@ -126,6 +126,7 @@ export const ShopNavigator = () => {
         name="Products"
         component={ProductsNavigator}
         options={{
+          headerShown: false,
           drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-cart" : "ios-cart"}
@@ -139,6 +140,7 @@ export const ShopNavigator = () => {
         name="Orders"
         component={OrdersNavigator}
         options={{
+          headerShown: false,
           drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
@@ -152,6 +154,7 @@ export const ShopNavigator = () => {
         name="Admin"
         component={AdminNavigator}
         options={{
+          headerShown: false,
           drawerIcon: (props) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-create" : "ios-create"}

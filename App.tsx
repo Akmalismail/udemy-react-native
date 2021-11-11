@@ -1,12 +1,12 @@
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
+import { LogBox } from 'react-native';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import ReduxThunk from 'redux-thunk';
 
 import AppNavigator from './navigation/AppNavigator';
-import ShopNavigator from './navigation/ShopNavigator';
 import authReducer from './store/reducers/auth';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
@@ -30,6 +30,7 @@ const fetchFonts = () => {
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
+  LogBox.ignoreLogs(["Setting a timer for a long period of time"]);
 
   if (!fontLoaded) {
     return (

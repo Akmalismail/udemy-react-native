@@ -115,7 +115,7 @@ const AuthScreen: React.FC<AuthScreenProps> = (props) => {
     setIsLoading(true);
     try {
       await dispatch(action as unknown as Promise<typeof action>);
-      props.navigation.navigate("Shop");
+      // props.navigation.navigate("Shop");
     } catch (error) {
       setError((error as { message: string }).message);
       setIsLoading(false);
