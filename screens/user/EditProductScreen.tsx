@@ -7,17 +7,15 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RouteProp } from '@react-navigation/native';
-import {
-    StackNavigationOptions, StackNavigationProp, StackScreenProps
-} from '@react-navigation/stack';
+import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
-import { AdminStackParamsList } from '../../navigation/ShopNavigator';
 import * as productActions from '../../store/actions/products';
+import { AdminStackParamsList, EditProductScreenProps } from '../../types';
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 type InputIdentifier = string | "title" | "imageUrl" | "description" | "price";
@@ -67,11 +65,6 @@ const formReducer = (
 
   return state;
 };
-
-type EditProductScreenProps = StackScreenProps<
-  AdminStackParamsList,
-  "EditProduct"
->;
 
 const EditProductScreen: React.FC<EditProductScreenProps> = ({
   route,

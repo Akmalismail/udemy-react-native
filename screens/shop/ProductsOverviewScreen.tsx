@@ -6,23 +6,16 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import {
-    StackNavigationOptions, StackNavigationProp, StackScreenProps
-} from '@react-navigation/stack';
+import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
-import { ProductsStackParamsList } from '../../navigation/ShopNavigator';
 import { addToCart } from '../../store/actions/cart';
 import * as productActions from '../../store/actions/products';
-
-type ProductsOverviewScreenProps = StackScreenProps<
-  ProductsStackParamsList,
-  "ProductsOverview"
->;
+import { ProductsOverviewScreenProps, ProductsStackParamsList } from '../../types';
 
 const ProductsOverviewScreen = (props: ProductsOverviewScreenProps) => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch } from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Colors from '../constants/Colors';
 import * as authActions from '../store/actions/auth';
 
-const StartupScreen: NavigationStackScreenComponent = (props) => {
+const StartupScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,7 +15,8 @@ const StartupScreen: NavigationStackScreenComponent = (props) => {
       const userData = await AsyncStorage.getItem("userData");
 
       if (!userData) {
-        props.navigation.navigate("Auth");
+        // props.navigation.navigate("Auth");
+        dispatch(authActions.setDidTryAL());
         return;
       }
 
@@ -29,13 +29,14 @@ const StartupScreen: NavigationStackScreenComponent = (props) => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        props.navigation.navigate("Auth");
+        // props.navigation.navigate("Auth");
+        dispatch(authActions.setDidTryAL());
         return;
       }
 
       const expirationTime = expirationDate.getTime() - new Date().getTime();
 
-      props.navigation.navigate("Shop");
+      // props.navigation.navigate("Shop");
       dispatch(authActions.authenticate(userId, token, expirationTime));
     };
 

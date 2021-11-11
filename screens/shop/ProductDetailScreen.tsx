@@ -4,20 +4,15 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RouteProp } from '@react-navigation/native';
-import { StackNavigationOptions, StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
-import { ProductsStackParamsList } from '../../navigation/ShopNavigator';
 import { addToCart } from '../../store/actions/cart';
+import { ProductDetailScreenProps, ProductsStackParamsList } from '../../types';
 
-type ProductsOverviewScreenProps = StackScreenProps<
-  ProductsStackParamsList,
-  "ProductDetail"
->;
-
-const ProductDetailScreen: React.FC<ProductsOverviewScreenProps> = ({
+const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   route,
   navigation,
 }) => {

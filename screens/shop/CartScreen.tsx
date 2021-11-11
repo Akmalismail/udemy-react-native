@@ -2,21 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { StackNavigationOptions, StackScreenProps } from '@react-navigation/stack';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import CartItem from '../../components/shop/CartItem';
 import Card from '../../components/ui/Card';
 import Colors from '../../constants/Colors';
-import CartItemType from '../../models/cart-item';
-import { ProductsStackParamsList } from '../../navigation/ShopNavigator';
 import * as cartActions from '../../store/actions/cart';
 import * as orderActions from '../../store/actions/orders';
-
-export type TransformedCartItems = CartItemType & {
-  productId: string;
-};
-type CartScreenProps = StackScreenProps<ProductsStackParamsList, "Cart">;
+import { CartScreenProps, TransformedCartItems } from '../../types';
 
 const CartScreen: React.FC<CartScreenProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);

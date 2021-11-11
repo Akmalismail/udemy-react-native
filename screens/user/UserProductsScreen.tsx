@@ -5,22 +5,15 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { DrawerActions, RouteProp } from '@react-navigation/native';
-import {
-    StackNavigationOptions, StackNavigationProp, StackScreenProps
-} from '@react-navigation/stack';
+import { StackNavigationOptions, StackNavigationProp } from '@react-navigation/stack';
 
 import { RootState } from '../../App';
 import ProductItem from '../../components/shop/ProductItem';
 import CustomHeaderButton from '../../components/ui/CustomHeaderButton';
 import Colors from '../../constants/Colors';
 import Product from '../../models/product';
-import { AdminStackParamsList } from '../../navigation/ShopNavigator';
 import * as productsActions from '../../store/actions/products';
-
-type UserProductsScreenProps = StackScreenProps<
-  AdminStackParamsList,
-  "UserProducts"
->;
+import { AdminStackParamsList, UserProductsScreenProps } from '../../types';
 
 const UserProductsScreen: React.FC<UserProductsScreenProps> = (props) => {
   const userProducts = useSelector<RootState, Product[]>(

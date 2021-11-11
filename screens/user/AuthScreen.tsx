@@ -4,13 +4,15 @@ import {
     ActivityIndicator, Alert, Button, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet,
     TouchableWithoutFeedback, View
 } from 'react-native';
-import { NavigationStackScreenComponent } from 'react-navigation-stack';
 import { useDispatch } from 'react-redux';
+
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
+import { AuthScreenProps } from '../../types';
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 type InputIdentifier = "email" | "password";
@@ -58,7 +60,7 @@ const formReducer = (
   return state;
 };
 
-const AuthScreen: NavigationStackScreenComponent = (props) => {
+const AuthScreen: React.FC<AuthScreenProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>();
   const [isSignUp, setisSignUp] = useState(false);
@@ -191,7 +193,7 @@ const AuthScreen: NavigationStackScreenComponent = (props) => {
   );
 };
 
-AuthScreen.navigationOptions = {
+export const screenOptions: StackNavigationOptions = {
   headerTitle: "Authenticate",
 };
 

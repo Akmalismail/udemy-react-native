@@ -1,5 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const SET_DID_TRY_AL = "SET_DID_TRY_AL";
+export type SetDidTryALAction = {
+  type: typeof SET_DID_TRY_AL;
+};
+export const setDidTryAL = (): SetDidTryALAction => {
+  return {
+    type: SET_DID_TRY_AL,
+  };
+};
+
 // sign up
 export const signUp = (email: string, password: string) => {
   return async (
