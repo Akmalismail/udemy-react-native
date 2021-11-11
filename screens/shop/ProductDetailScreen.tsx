@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Button, Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,6 +17,9 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   navigation,
 }) => {
   const { productId } = route.params;
+  const [imageRatio, setImageRatio] = useState<number>();
+  const { height, width } = useWindowDimensions();
+
   const selectedProduct = useSelector<RootState, Product>(
     (state) =>
       state.products.availableProducts.find(
@@ -25,9 +28,21 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({
   );
   const dispatch = useDispatch();
 
+  Image.getSize(selectedProduct.imageUrl, (imageWidth, imageHeight) => {
+    setImageRatio(imageHeight / imageWidth);
+  });
+
   return (
     <ScrollView>
-      <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
+      <Image
+        style={{
+          ...styles.image,
+          height: imageRatio ? imageRatio * width : 0,
+          width: width,
+        }}
+        source={{ uri: selectedProduct.imageUrl }}
+      />
+
       <View style={styles.actions}>
         <Button
           color={Colors.primary}
@@ -54,10 +69,7 @@ export const screenOptions: (props: {
 export default ProductDetailScreen;
 
 const styles = StyleSheet.create({
-  image: {
-    width: "100%",
-    height: 300,
-  },
+  image: {},
   actions: {
     marginVertical: 10,
     alignItems: "center",
