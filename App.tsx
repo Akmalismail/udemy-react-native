@@ -1,5 +1,6 @@
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
+import * as Notifications from 'expo-notifications';
 import React, { useState } from 'react';
 import { LogBox } from 'react-native';
 import { Provider } from 'react-redux';
@@ -11,6 +12,16 @@ import authReducer from './store/reducers/auth';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
 import productsReducer from './store/reducers/products';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   products: productsReducer,
