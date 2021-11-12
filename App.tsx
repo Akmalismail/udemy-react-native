@@ -23,9 +23,13 @@ export default function App() {
         return status;
       })
       .then((status) => {
-        if (status.granted) {
-          return;
+        if (!status.granted) {
+          throw new Error("Permission not granted");
         }
+      })
+      .then(() => {})
+      .catch((_) => {
+        return null;
       });
   }, []);
 
