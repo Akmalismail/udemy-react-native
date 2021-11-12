@@ -30,11 +30,11 @@ export default function App() {
       .then(() => {
         return Notifications.getExpoPushTokenAsync();
       })
-      .then((data) => {
-        console.log(data);
+      .then((response) => {
+        const token = response.data;
       })
       .catch((error) => {
-        console.error("error", error);
+        console.error("getPermissionsAsync", error);
         return null;
       });
   }, []);
