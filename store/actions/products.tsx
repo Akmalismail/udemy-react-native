@@ -15,6 +15,7 @@ export type CreateProductAction = {
     imageUrl: string;
     price: number;
     ownerId: string;
+    pushToken: string | null;
   };
 };
 export const createProduct = (
@@ -69,6 +70,7 @@ export const createProduct = (
         price,
         description,
         ownerId: userId as string,
+        pushToken: pushToken,
       },
     });
   };
@@ -113,6 +115,7 @@ export const fetchProduct = () => {
           new Product(
             id,
             responseData[id].ownerId,
+            responseData[id].ownerPushToken,
             responseData[id].title,
             responseData[id].imageUrl,
             responseData[id].description,

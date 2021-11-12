@@ -1,6 +1,5 @@
 import React from 'react';
 import { Alert, Button, FlatList, Platform, StyleSheet, Text, View } from 'react-native';
-import { NavigationDrawerProp } from 'react-navigation-drawer';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 

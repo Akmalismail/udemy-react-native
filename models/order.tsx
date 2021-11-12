@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { TransformedCartItems } from '../screens/shop/CartScreen';
+import { TransformedCartItems } from '../types';
 import CartItem from './cart-item';
 
 class Order {
