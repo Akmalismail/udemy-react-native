@@ -29,6 +29,18 @@ export default function App() {
       });
   }, []);
 
+  useEffect(() => {
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("notification", notification);
+      }
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const triggerNotificationHandler = async () => {
     Notifications.scheduleNotificationAsync({
       content: {
