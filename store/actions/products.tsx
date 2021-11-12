@@ -1,5 +1,8 @@
+import * as Notifications from 'expo-notifications';
+
 import { RootState } from '../../App';
 import Product from '../../models/product';
+import { HttpProducts } from '../../types';
 
 // create
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
@@ -24,6 +27,17 @@ export const createProduct = (
     dispatch: (action: CreateProductAction) => void,
     getState: () => RootState
   ) => {
+    let pushToken: string | null = null;
+    let permissionStatus = await Notifications.getPermissionsAsync();
+
+    if (!permissionStatus.granted) {
+      permissionStatus = await Notifications.requestPermissionsAsync();
+    }
+
+    if (permissionStatus.granted) {
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const response = await fetch(
@@ -39,7 +53,8 @@ export const createProduct = (
           imageUrl,
           price,
           ownerId: userId,
-        }),
+          ownerPushToken: pushToken,
+        } as HttpProducts),
       }
     );
 
@@ -88,26 +103,20 @@ export const fetchProduct = () => {
       }
 
       const responseData: {
-        [key: string]: {
-          ownerId: string;
-          description: string;
-          imageUrl: string;
-          price: number;
-          title: string;
-        };
+        [id: string]: HttpProducts;
       } = await response.json();
 
       const loadedProducts: Product[] = [];
 
-      for (const key in responseData) {
+      for (const id in responseData) {
         loadedProducts.push(
           new Product(
-            key,
-            responseData[key].ownerId,
-            responseData[key].title,
-            responseData[key].imageUrl,
-            responseData[key].description,
-            responseData[key].price
+            id,
+            responseData[id].ownerId,
+            responseData[id].title,
+            responseData[id].imageUrl,
+            responseData[id].description,
+            responseData[id].price
           )
         );
       }

@@ -59,3 +59,11 @@ export type AuthScreenProps = StackScreenProps<AuthStackParamsList, "Auth">;
 export type TransformedCartItems = CartItem & {
   productId: string;
 };
+export type HttpProducts = {
+  title: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  ownerId: string;
+  ownerPushToken: string;
+};

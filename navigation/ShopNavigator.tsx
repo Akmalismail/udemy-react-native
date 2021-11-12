@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Platform, View } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -104,7 +104,7 @@ export const ShopNavigator = () => {
       drawerContent={(props) => {
         return (
           <View style={{ flex: 1, paddingTop: 20 }}>
-            <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
+            <SafeAreaView edges={["top"]}>
               <DrawerItemList {...props} />
               <Button
                 title="Logout"
